@@ -82,3 +82,26 @@
 .faq-btn:hover {
   transform: scale(1.05);
 }
+@media (max-width: 480px) {
+  .faq-title {
+    font-size: 28px;
+    padding: 0 12px;
+    line-height: 1.2;
+  }
+
+  .faq-question {
+    font-size: 16px;
+    padding: 14px 16px;
+  }
+
+  .faq-answer {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+
+  .faq-btn {
+    width: 90%;
+    max-width: 280px;
+    margin-top: 20px;
+  }
+}

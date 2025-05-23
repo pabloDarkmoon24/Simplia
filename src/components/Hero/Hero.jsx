@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Hero.css";
+import "../Hero/Hero.css";
 import netflix from "../../assets/netflix.png";
 import spotify from "../../assets/spotify.png";
 import disney from "../../assets/disney.png";
@@ -39,7 +39,7 @@ export const Hero = () => {
   return (
     <section className="hero-section">
       <div className="hero-content container">
-        <img src={simplia} alt="simplia"/><br />
+        <img src={simplia} alt="simplia" className="logo"/><br />
         <h2 className="hero-title">Una sola membresía,</h2><br />
         <h3 className="hero-subtitle-box">Para tus servicios favoritos.</h3>
 

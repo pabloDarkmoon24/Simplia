@@ -64,3 +64,38 @@
   display: block;
   width: 100%;
 }
+@media (max-width: 480px) {
+  .section-seven .section-title {
+    font-size: 28px;
+    padding: 0 12px;
+    line-height: 1.2;
+  }
+
+  .section-seven img[alt="subtitle-linea"] {
+    width: 80%;
+    max-width: 240px;
+    margin: 0 auto 30px auto;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .steps-grid img {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .btn-img {
+    width: 90%;
+    max-width: 300px;
+  }
+
+  .hero-divider {
+    width: 80%;
+    max-width: 250px;
+    margin-top: 40px;
+  }
+}

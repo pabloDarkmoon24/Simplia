@@ -65,3 +65,15 @@
   object-fit: cover;
   border-radius: 12px;
 }
+@media (max-width: 480px) {
+  .section-six .section-title {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .section-six .section-subtitle {
+    font-size: 18px;
+    padding: 0 12px;
+    line-height: 1.4;
+  }
+}

@@ -1,3 +1,12 @@
+.logo {
+  width: 100%;
+  max-width: 280px;     
+  height: auto;        
+  object-fit: contain; 
+  display: block;
+  margin: 0 auto;
+  padding: 10px 0;
+}
 .hero-section {
   background: url("../../assets/bg-hero.png") center/cover no-repeat;
   padding-bottom: 40px; 
@@ -16,8 +25,9 @@
 .container {
   max-width: 1140px;
   margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
-
 .hero-title {
   font-size: 30px;
   font-weight: 700;
@@ -136,30 +146,34 @@
   margin-left: auto;
   margin-right: auto;
 }
-@media (max-width: 768px) {
+
+@media (max-width: 480px) {
   .hero-title {
-    font-size: 20px;
-    padding: 8px 12px;
+    font-size: 24px;
+    padding: 6px 12px;
+    line-height: 1.2;
   }
 
   .hero-subtitle-box {
-    font-size: 18px;
-    padding: 8px 12px;
+    font-size: 16px;
+    padding: 6px 12px;
   }
 
   .hero-description {
-    font-size: 16px;
-    padding: 8px 12px;
+    font-size: 14px;
+    padding: 6px 12px;
+    margin-top: 20px;
   }
 
   .carousel {
-    height: 120px;
+    height: 130px;
+    overflow-x: hidden;
     margin: 20px 0;
   }
 
   .slide img {
-    width: 120px;
-    height: 80px;
+    width: 130px;
+    height: 90px;
   }
 
   .leftSlide1 {
@@ -178,44 +192,24 @@
     transform: translateX(160px) scale(0.8);
   }
 
-  .activeSlide {
-    transform: scale(1.05);
-  }
-
   .hero-button-img {
     width: 90%;
-    max-width: 280px;
+    max-width: 260px;
+    margin-top: 20px;
   }
 
   .hero-divider {
-    max-width: 240px;
     margin-top: 40px;
+    max-width: 220px;
+  }
+
+  .hero-section {
+    padding-top: 30px;
+    padding-bottom: 40px;
   }
 }
-
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 18px;
-  }
-
-  .hero-subtitle-box {
-    font-size: 16px;
-  }
-
-  .hero-description {
-    font-size: 14px;
-  }
-
-  .carousel {
-    height: 100px;
-  }
-
-  .slide img {
-    width: 100px;
-    height: 70px;
-  }
-
-  .hero-button-img {
-    max-width: 240px;
+  .logo {
+    max-width: 220px;   
   }
 }
