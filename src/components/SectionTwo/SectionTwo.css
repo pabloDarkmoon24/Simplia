@@ -1,28 +1,21 @@
 .section-two {
-  position: relative;
-  background: url("../../assets/Ahorrar-es-simplia-Pcs.png") center top no-repeat;
-  background-size: contain;
-  color: white;
-  text-align: center;
-  min-height: 100vh;
+  background: url("../../assets/Ahorrar-es-simplia-Pcs.png") no-repeat center top;
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
   padding: 0;
+  overflow: hidden;
 }
-
 
 @media (max-width: 768px) {
   .section-two {
-    background: url("../../assets/Ahorrar-es-simplia-mobile.png") center top no-repeat;
-    background-size: contain;
-    padding: 100px 15px;
+    background: url("../../assets/Ahorrar-es-simplia-mobile.png") no-repeat center top;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
 }
-
-
-@media (min-width: 1440px) {
-  .section-two {
-    background-size: 100% auto;
-    background-position: center top;
-    background-repeat: no-repeat;
-  }
-}
-
