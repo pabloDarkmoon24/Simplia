@@ -1,0 +1,59 @@
+.section-four {
+  background-color: #675cff;
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+}
+@font-face {
+  font-family: 'GriftSemiblod';
+  src: url('../../assets/fonts/GRIFT-SEMIBOLD.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'LaboraRegular';
+  src: url('../../assets/fonts/LABORA-REGULAR.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.section-four .section-title {
+  font-size: 50px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  font-family: 'LaboraRegular';
+  line-height: 1.3;
+}
+
+.section-title span {
+  background: #000;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+}
+
+.cards-container img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.botton-message {
+  background: black;
+  color: white;
+  display: inline-block;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  font-family: 'GriftSemiblod';
+  font-size: 30px;
+
+}

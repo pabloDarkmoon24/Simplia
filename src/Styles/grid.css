@@ -1,0 +1,23 @@
+.container {
+  width: 100%;
+  max-width: 1140px;
+  margin: auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.col-12 {
+  width: 100%;
+  padding: 0 15px;
+}
+
+@media (min-width: 768px) {
+  .col-md-6 { width: 50%; }
+  .col-md-4 { width: 33.3333%; }
+  .col-md-3 { width: 25%; }
+}

@@ -1,0 +1,58 @@
+.section-three {
+  background-color: #070625;
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+}
+@font-face {
+  font-family: 'GriftSemiblod';
+  src: url('../../assets/fonts/GRIFT-SEMIBOLD.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icons-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.icons-container img {
+  width: 100px;
+  height: 100px;
+
+}
+
+.info-box {
+  background-color: #675cff;
+  padding: 15px 20px;
+  margin: 0 auto 20px auto;
+  max-width: 600px;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  line-height: 1.5;
+  font-family: 'GriftSemiblod', sans-serif;
+  font-size: 25px;
+}
+
+.line-text {
+  font-weight: bold;
+  margin-top: 30px;
+  font-size: 25px;
+  font-family: 'GriftSemiblod', sans-serif;
+}
+
+.highlight-box span {
+  background-color: #00e5ff;
+  color: #0b0f26;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 25px;
+  font-family: 'GriftSemiblod', sans-serif;
+}

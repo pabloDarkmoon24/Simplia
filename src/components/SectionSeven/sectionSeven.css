@@ -1,0 +1,66 @@
+.section-seven {
+  background-color: #070625;
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+}
+@font-face {
+  font-family: 'LaboraRegular';
+  src: url('../../assets/fonts/LABORA-REGULAR.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.section-seven .section-title {
+  font-size: 50px;
+  font-family: 'LaboraRegular';
+  font-weight: 700 ;
+  margin-bottom: 16px;
+}
+
+.section-seven img[alt="subtitle-linea"] {
+  width: 400px;
+  margin: 0 auto 40px auto;
+
+}
+
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.steps-grid img {
+  width: 90%;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.steps-grid img:hover {
+  transform: scale(1.03);
+}
+
+.btn-container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-img {
+  width: 350px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.btn-img:hover {
+  transform: scale(1.05);
+}
+
+.hero-divider {
+  margin: 60px auto 0 auto;
+  display: block;
+  width: 100%;
+}

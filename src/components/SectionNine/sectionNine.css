@@ -1,0 +1,84 @@
+.section-nine {
+  background-color: #070625;
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+}
+@font-face {
+  font-family: 'LaboraRegular';
+  src: url('../../assets/fonts/LABORA-REGULAR.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GriftSemiblod';
+  src: url('../../assets/fonts/GRIFT-SEMIBOLD.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.faq-title {
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  font-family: 'LaboraRegular' ;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background-color: #070625;
+  border: 1px solid white;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  font-weight: 500;
+  font-size: 20px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: background 0.2s;
+  font-family: 'GriftSemiblod';
+}
+
+.faq-question:hover {
+  background-color: #262a4d;
+}
+
+.faq-toggle {
+  font-size: 15px;
+  font-weight: bold;
+  color: #b2b8e0;
+  margin-left: 12px;
+  flex-shrink: 0;
+  font-family: 'GriftSemiblod';
+}
+
+.faq-answer {
+  padding: 15px 20px;
+  background-color: #070625;
+  color: #ccc;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  border-top: 1px solid #3e4166;
+}
+
+.faq-btn {
+  width: 350px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.faq-btn:hover {
+  transform: scale(1.05);
+}

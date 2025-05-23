@@ -1,0 +1,67 @@
+.section-six {
+  background-color: #070625;
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+}
+@font-face {
+  font-family: 'GriftSemiblod';
+  src: url('../../assets/fonts/GRIFT-SEMIBOLD.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'LaboraRegular';
+  src: url('../../assets/fonts/LABORA-REGULAR.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.section-title {
+  font-size: 50px;
+  font-weight: 800;
+  margin-bottom: 0px;
+  position: relative;
+  font-family: 'LaboraRegular'
+}
+
+.section-subtitle {
+  font-size: 30px;
+  font-family: 'GriftSemiblod';
+  margin-top: 0;
+  margin-bottom: 40px;
+  
+}
+
+.netflix-card {
+  grid-row: span 2;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.guides-grid img {
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  object-fit: contain;
+}
+
+.guides-grid img:hover {
+  transform: scale(1.05);
+}
+
+.netflix-card {
+  grid-row: span 2;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
