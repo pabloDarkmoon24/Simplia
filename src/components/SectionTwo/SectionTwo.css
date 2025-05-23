@@ -1,19 +1,28 @@
 .section-two {
   position: relative;
-  background: url("../../assets/Ahorrar-es-simplia-Pcs.png") center/cover no-repeat;
+  background: url("../../assets/Ahorrar-es-simplia-Pcs.png") center top no-repeat;
+  background-size: contain;
   color: white;
   text-align: center;
-  padding: 60px 20px;
   min-height: 100vh;
+  padding: 0;
 }
 
 
-
-/* Fondo alternativo en móviles */
 @media (max-width: 768px) {
   .section-two {
-    background: url("../../assets/Ahorrar-es-simplia-mobile.png") center/cover no-repeat;
+    background: url("../../assets/Ahorrar-es-simplia-mobile.png") center top no-repeat;
+    background-size: contain;
     padding: 100px 15px;
+  }
+}
+
+
+@media (min-width: 1440px) {
+  .section-two {
+    background-size: 100% auto;
+    background-position: center top;
+    background-repeat: no-repeat;
   }
 }
 
