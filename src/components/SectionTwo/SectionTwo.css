@@ -16,3 +16,8 @@
   object-fit: contain;
   object-position: center center;
 }
+@media (max-width: 450px) {
+  .section-two img {
+    object-fit: cover;
+  }
+}

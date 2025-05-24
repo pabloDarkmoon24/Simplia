@@ -181,6 +181,7 @@
   margin-bottom: 30px;
   font-size: 25px;
   font-family: 'GriftBlack', sans-serif;
+  color: white;
   
 }
 
@@ -220,6 +221,7 @@
     font-size: 14px;
     padding: 6px 12px;
     margin-top: 20px;
+    color: white;
   }
 
   .carousel {
