@@ -16,6 +16,11 @@
   padding: 0 20px;
   text-align: center;
   box-sizing: border-box;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  position: relative;
+  left: 0;
+  box-sizing: border-box;
 }
 
 .hero-content {
@@ -84,7 +89,7 @@
   transform: translateY(-50%);
   font-size: 24px;
   color: white;
-  background: rgba(0, 0, 0, 0.4);
+
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -101,6 +106,9 @@
 
 .carousel-btn:hover {
   background: rgba(0, 0, 0, 0.7);
+}
+.carousel-btn {
+  display: none;
 }
 
 .carousel-btn.prev {
@@ -173,6 +181,7 @@
   margin-bottom: 30px;
   font-size: 25px;
   font-family: 'GriftBlack', sans-serif;
+  
 }
 
 .hero-button-img {
@@ -218,6 +227,7 @@
     overflow-x: hidden;
     margin: 20px 0;
   }
+  
 
   .slide img {
     width: 130px;
@@ -255,9 +265,22 @@
     padding-top: 30px;
     padding-bottom: 40px;
   }
+  
 }
 @media (max-width: 480px) {
   .logo {
     max-width: 220px;   
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-btn {
+    display: flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carousel-btn {
+    display: flex;
   }
 }
