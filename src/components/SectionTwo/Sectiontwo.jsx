@@ -2,7 +2,7 @@ import React from "react";
 import "../SectionTwo/SectionTwo.css";
 import fondoPc from "../../assets/Ahorrar-es-simplia-Pcs.png";
 import fondoMobile from "../../assets/Ahorrar-es-simplia-mobile.png";
-import { useIsMobile } from "../../hooks/useIsMobile";
+import { useIsMobile } from "../../assets/Hook/useIsMobile";
 
 export const SectionTwo = () => {
   const isMobile = useIsMobile();
