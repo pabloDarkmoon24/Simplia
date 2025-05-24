@@ -3,6 +3,11 @@
   padding: 60px 20px;
   text-align: center;
   color: white;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  position: relative;
+  left: 0;
+  box-sizing: border-box;
 }
 
 @font-face {
