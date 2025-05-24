@@ -30,7 +30,7 @@ export const Hero = () => {
     clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length);
-    }, 2500);
+    }, 2000);
   };
 
   useEffect(() => {
