@@ -273,11 +273,6 @@
   }
 }
 
-@media (max-width: 768px) {
-  .carousel-btn {
-    display: flex;
-  }
-}
 
 @media (min-width: 1024px) {
   .carousel-btn {
