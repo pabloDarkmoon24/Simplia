@@ -91,7 +91,13 @@ export const Hero = () => {
         <p className="hero-description">
           Por un solo precio, descubre lo fácil que es tenerlo todo.
         </p>
-        <img src={boton} alt="boton" className="hero-button-img" />
+        <img src={boton} alt="boton" className="hero-button-img" 
+                    onClick={() => {
+                    const target = document.getElementById("membresias");
+                    if (target) target.scrollIntoView({ behavior: "smooth" });
+                    }}
+          />
+
         <img src={linea} alt="Decoración inferior" className="hero-divider" />
       </div>
     </section>

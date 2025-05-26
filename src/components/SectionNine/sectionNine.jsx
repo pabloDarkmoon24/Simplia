@@ -58,7 +58,11 @@ export const SectionNine = () =>{
                 ))}
             </div>
             <div className="faq-btn-container">
-                <img src={btn} alt="quiero mi membresia" className="faq-btn" />
+                <img src={btn} alt="quiero mi membresia" className="faq-btn"
+                    onClick={() => {
+                    const target = document.getElementById("membresias");
+                    if (target) target.scrollIntoView({ behavior: "smooth" });
+                    }} />
             </div>
         </section>
     )

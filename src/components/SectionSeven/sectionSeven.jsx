@@ -20,7 +20,15 @@ export const SectionSeven = () => {
                 <img src={paso4} alt="paso 4" />
             </div>
             <div className="btn-container">
-                <img src={btn} alt="boton membresia" className="btn-img" />
+                 <img
+                    src={btn}
+                    alt="boton membresia"
+                    className="btn-img"
+                    onClick={() => {
+                    const target = document.getElementById("membresias");
+                    if (target) target.scrollIntoView({ behavior: "smooth" });
+                    }}
+                />
             </div>
             <img src={separador} alt="Decoración inferior" className="hero-divider" />
         </section>
