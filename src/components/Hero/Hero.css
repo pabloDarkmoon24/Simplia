@@ -13,7 +13,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
   text-align: center;
   box-sizing: border-box;
   width: 100vw;
@@ -21,6 +20,7 @@
   position: relative;
   left: 0;
   box-sizing: border-box;
+  margin-top: -40px; 
 }
 
 .hero-content {
@@ -30,7 +30,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 24px; /* controla separación entre elementos */
+  gap: 24px; 
 }
 
 @font-face {
@@ -38,7 +38,7 @@
   src: url('../../assets/fonts/GRIFT-BLACK.TTF') format('truetype');
   font-weight: normal;
   font-style: normal;
-}
+} 
 
 .container {
   max-width: 1140px;
@@ -280,4 +280,16 @@
   .carousel-btn {
     display: flex;
   }
+  
+}
+.leftSlide3 {
+  transform: translateX(-420px) scale(0.7);
+  opacity: 0.2;
+  z-index: 0;
+}
+
+.rightSlide3 {
+  transform: translateX(420px) scale(0.7);
+  opacity: 0.2;
+  z-index: 0;
 }

@@ -10,6 +10,12 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'GriftBlack';
+  src: url('../../assets/fonts/GRIFT-BLACK.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 .icons-container {
   display: flex;
@@ -54,7 +60,7 @@
   display: inline-block;
   margin-top: 10px;
   font-size: 25px;
-  font-family: 'GriftSemiblod';
+  font-family: 'GriftBlack';
 }
 
 @media (max-width: 480px) {

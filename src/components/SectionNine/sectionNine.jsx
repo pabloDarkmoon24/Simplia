@@ -6,7 +6,7 @@ import btn from '../../assets/Boton-quiero-mi-membresia.png'
 const questions = [
   {
     pregunta: "¿Qué plataformas incluye?",
-    respuesta: "Manejamos tres planes actualmente. Cada plan cuenta con un grupo selecto de suscripciones premium originales, que puedes revisar en la sección de membresías.",
+    respuesta: "manejamos tres planes actualmente. Cada plan cuenta con un grupo selecto de suscripciones premium originales, que puedes revisar en la sección de membresías.",
   },
   {
     pregunta: "¿Cómo recibo mis accesos?",

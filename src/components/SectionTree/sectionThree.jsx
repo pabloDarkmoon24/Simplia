@@ -18,7 +18,7 @@ export const SectionTreee = () =>{
                 <img src={icon5} alt="mas" />
             </div>
             <div className="info-box">
-            Música y podcasts, películas y series,<br />
+            música y podcasts, películas y series,<br />
             edición y diseño, descuentos, obsequios...<br />
             y más.
             </div>  

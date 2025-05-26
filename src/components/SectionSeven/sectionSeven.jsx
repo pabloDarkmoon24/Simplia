@@ -11,7 +11,7 @@ import subtitle from '../../assets/Subrayador-titulos.png'
 export const SectionSeven = () => {
     return (
         <section className="section-seven">
-            <h2 className="section-title">Como adquirir tu membresía</h2>
+            <h2 className="section-title">Como adquirir tu membresia</h2>
             <img src={subtitle} alt="subtitle-linea" />
             <div className="steps-grid">
                 <img src={paso1} alt="paso 1" />

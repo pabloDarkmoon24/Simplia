@@ -5,17 +5,17 @@ import usuario1 from '../../assets/usuario.png'
 const testimonios = [
     {
     nombre: "Laura G.",
-    comentario: "Gracias a Simplia, ahora tengo todas mis plataformas favoritas por un solo precio. ¡Me encanta!",
+    comentario: "Gracias a Simplia, ahora tengo todas mis plataformas favoritas por un solo precio. ¡me encanta!",
     foto: usuario1,
   },
   {
-    nombre: "Carlos M.",
+    nombre: "Carlos C.",
     comentario: "El servicio es excelente, y el ahorro es real. ¡Totalmente recomendado!",
     foto: usuario1,
   },
   {
     nombre: "Diana R.",
-    comentario: "Nunca pensé que fuera tan fácil. Me ayudaron en todo y funciona perfecto.",
+    comentario: "Nunca pensé que fuera tan fácil. me ayudaron en todo y funciona perfecto.",
     foto: usuario1,
   },
 ]

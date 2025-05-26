@@ -9,12 +9,18 @@ import simplia from "../../assets/logo-simplia.png";
 import boton from "../../assets/boton-simplia.png"
 import linea from "../../assets/linea.png"
 import { useSwipeable } from "react-swipeable";
+import tarjeta1 from '../../assets/Tarjeta-2.png'
+import tarjeta2 from '../../assets/Tarjeta-4.png'
+import tarjeta3 from '../../assets/Tarjeta-6.png'
+import tarjeta4 from '../../assets/Tarjeta-8.png'
+import paramount from '../../assets/paramount.png'
+import crunchy from '../../assets/crunchy.png'
 
 export const Hero = () => {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef();
 
-  const images = [canva, spotify, netflix, disney, max]; 
+  const images = [netflix, tarjeta1 ,spotify,tarjeta2, canva,tarjeta3, disney, tarjeta4, max, crunchy,paramount]; 
 
   const next = () => {
     setCurrent((prev) => (prev + 1) % images.length);
@@ -46,20 +52,23 @@ export const Hero = () => {
   });
 
   const getClass = (index) => {
-    const total = images.length;
-    const left2 = (current - 2 + total) % total;
-    const left1 = (current - 1 + total) % total;
-    const right1 = (current + 1) % total;
-    const right2 = (current + 2) % total;
+  const total = images.length;
+  const left3 = (current - 3 + total) % total;
+  const left2 = (current - 2 + total) % total;
+  const left1 = (current - 1 + total) % total;
+  const right1 = (current + 1) % total;
+  const right2 = (current + 2) % total;
+  const right3 = (current + 3) % total;
 
-    if (index === current) return "activeSlide";
-    if (index === left1) return "leftSlide1";
-    if (index === left2) return "leftSlide2";
-    if (index === right1) return "rightSlide1";
-    if (index === right2) return "rightSlide2";
-    return "hiddenSlide";
-  };
-
+  if (index === current) return "activeSlide";
+  if (index === left1) return "leftSlide1";
+  if (index === left2) return "leftSlide2";
+  if (index === left3) return "leftSlide3";
+  if (index === right1) return "rightSlide1";
+  if (index === right2) return "rightSlide2";
+  if (index === right3) return "rightSlide3";
+  return "hiddenSlide";
+};
   return (
     <section className="hero-section">
       <div className="hero-content container">
