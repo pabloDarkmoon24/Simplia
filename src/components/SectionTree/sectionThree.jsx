@@ -23,10 +23,10 @@ export const SectionTreee = () =>{
             y más.
             </div>  
             <p className="line-text">
-                Olvidate de pagar por una.
+                Olvidate de pagar una por una.
             </p>      
             <p className="highlight-box">
-                <span>Con Simplia, lo tienes todo, por mucho menos</span>
+                <span >Con Simplia, lo tienes todo, por mucho menos</span>
             </p>    
         </section>
     )

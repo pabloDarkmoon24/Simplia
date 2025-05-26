@@ -30,7 +30,7 @@ export const SectionFive = () => {
 
   return (
     <section className="section-five">
-      <h2 className="section-title">Membresías</h2>
+      <h2 className="section-title">Membresias</h2>
       <img src={subtitle} alt="subtitle-linea" />
       <div className="plans-container">
         <div className="plan-card">

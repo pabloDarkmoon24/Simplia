@@ -6,28 +6,28 @@ import btn from '../../assets/Boton-quiero-mi-membresia.png'
 const questions = [
   {
     pregunta: "¿Qué plataformas incluye?",
-    respuesta: "Aquí irá la descripción detallada de las plataformas incluidas.",
+    respuesta: "Manejamos tres planes actualmente. Cada plan cuenta con un grupo selecto de suscripciones premium originales, que puedes revisar en la sección de membresías.",
   },
   {
-    pregunta: "Cómo recibo mis accesos",
-    respuesta: "Aquí podrás explicar el proceso de entrega de accesos.",
+    pregunta: "¿Cómo recibo mis accesos?",
+    respuesta: "Actualmente, todos tus accesos y consultas los puedes gestionar a través de nuestro WhatsApp, donde tenemos asesores disponibles para atenderte.",
   },
   {
-    pregunta: "Puedo cancelar cuando quiera",
-    respuesta: "Explica las condiciones de cancelación, si las hay.",
+    pregunta: "¿Puedo cancelar cuando quiera?",
+    respuesta: "No manejamos cláusulas de permanencia en ninguno de nuestros planes. Tú decides si deseas renovar la suscripción o dejarla vencer.",
   },
   {
-    pregunta: "Qué pasa si tengo dudas",
-    respuesta: "Puedes añadir cómo funciona el soporte o contacto.",
+    pregunta: "¿Qué pasa si tengo dudas?",
+    respuesta: "Puedes comunicarte con nosotros siempre que lo necesites a través de nuestro WhatsApp.",
   },
   {
-    pregunta: "Cuáles son los regalos o descuentos",
-    respuesta: "Aquí puedes listar los beneficios adicionales.",
+    pregunta: "¿Cuáles son los regalos o descuentos?",
+    respuesta: "Cada mes estaremos ofreciendo descuentos en diferentes empresas o franquicias para que disfrutes aún más de tu membresía, sin olvidar que contarás con tus plataformas preferidas.",
   },
   {
-    pregunta: "Cuántos perfiles o dispositivos puedo usar por plataforma",
-    respuesta: "Describe los límites según cada plataforma.",
-  },
+    pregunta: "¿Cuántos perfiles o dispositivos puedo usar por plataforma?",
+    respuesta: "Cada suscripción cuenta con una pantalla de un producto digital disponible para un dispositivo. Te recomendamos revisar las guías para comprender el funcionamiento específico de cada producto.",
+  }
 ];
 
 
