@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../Hero/Hero.css";
 import netflix from "../../assets/netflix.png";
-import spotify from "../../assets/spotify.png";
+import spotify from "../../assets/dezzer.png";
 import disney from "../../assets/disney.png";
 import canva from "../../assets/canva.png";
 import max from "../../assets/max.png";
@@ -15,12 +15,15 @@ import tarjeta3 from '../../assets/Tarjeta-6.png'
 import tarjeta4 from '../../assets/Tarjeta-8.png'
 import paramount from '../../assets/paramount.png'
 import crunchy from '../../assets/crunchy.png'
+import prime from '../../assets/prime.png'
+import directvgo from '../../assets/directvgo.png'
+
 
 export const Hero = () => {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef();
 
-  const images = [netflix, tarjeta1 ,spotify,tarjeta2, canva,tarjeta3, disney, tarjeta4, max, crunchy,paramount]; 
+  const images = [netflix, tarjeta1 ,spotify,tarjeta2, canva,tarjeta3, disney, tarjeta4, max, crunchy,paramount,prime, directvgo]; 
 
   const next = () => {
     setCurrent((prev) => (prev + 1) % images.length);
