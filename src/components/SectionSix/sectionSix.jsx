@@ -18,7 +18,7 @@ import guiaCanva from '../../assets/GUIA-CANVA.jpeg'
 import guiaMax from '../../assets/GUIA-MAX.jpeg'
 import guiaParamount from '../../assets/GUIA-PARAMOUNT.jpeg'
 import guiaPrime from '../../assets/GUIA-PRIME.jpeg'
-// import guiadezzer from '../../assets/GUIA-NETFLIX.jpeg'
+import guiaSpotify from '../../assets/GUIA-NETFLIX.jpeg'
 import guiaCrunchy from '../../assets/GUIA-CRUNCHY.jpeg'
 
 
@@ -27,7 +27,7 @@ const plataformas = [
   { img: netflix, alt: "Netflix", guia: guiaNetflix, className: "netflix-card" },
   { img: max, alt: "Max", guia: guiaMax },
   { img: prime, alt: "Prime Video", guia: guiaPrime },
-  // { img: dezzer, alt: "dezzer", guia: guiadezzer },
+  { img: dezzer, alt: "Spotify", guia: guiaSpotify },
   { img: paramount, alt: "Paramount+", guia: guiaParamount },
   { img: canva, alt: "Canva", guia: guiaCanva },
   { img: crunchy, alt: "Crunchyroll", guia: guiaCrunchy }

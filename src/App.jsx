@@ -8,6 +8,8 @@ import { SectionSeven } from './components/SectionSeven/sectionSeven'
 import { SectionSix } from './components/SectionSix/sectionSix'
 import { SectionTreee } from './components/SectionTree/sectionThree'
 import { SectionTwo } from './components/SectionTwo/Sectiontwo'
+import { WhatsAppButton } from './components/WhatsAppButton/Whatsappbutton'
+
 
 
 
@@ -23,6 +25,7 @@ function App() {
       <SectionSeven/>
       <SectionEight/>
       <SectionNine/>
+      <WhatsAppButton />
     </>
   )
 }

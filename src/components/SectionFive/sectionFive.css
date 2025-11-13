@@ -22,7 +22,6 @@
   z-index: -1;
 }
 
-
 .section-five h2 {
   font-size: 50px;
   font-weight: 700;
@@ -54,6 +53,23 @@
   transform: scale(1.05) translateY(-25px);
 }
 
+/* Estilos para el link "Conocer más" */
+.conocer-mas-link {
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.conocer-mas-link:hover {
+  color: #5c5cec;
+  text-decoration: none;
+  transform: scale(1.05);
+}
+
 .plan-card button:hover {
   transform: scale(1.05);
 }
@@ -65,7 +81,7 @@
 .plan-card button {
   background: none;
   border: none;
-  margin-top: 16px;
+  margin-top: 8px;
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -76,4 +92,72 @@
 
 .button:hover {
   transform: scale(1.05);
+}
+
+
+/* Estilos para la nueva sección de Cuentas Completas */
+.cuentas-completas-section {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.cuentas-completas-title {
+  font-size: 45px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  text-align: center;
+}
+
+.cuentas-completas-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.cuentas-completas-button:hover {
+  transform: scale(1.05);
+}
+
+.cuentas-completas-button img {
+  width: 400px;
+  max-width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .section-five h2 {
+    font-size: 36px;
+  }
+
+  .cuentas-completas-title {
+    font-size: 24px;
+    padding: 0 20px;
+  }
+
+  .cuentas-completas-button img {
+    width: 250px;
+  }
+
+  .conocer-mas-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-five h2 {
+    font-size: 28px;
+  }
+
+  .cuentas-completas-title {
+    font-size: 20px;
+  }
+
+  .cuentas-completas-button img {
+    width: 200px;
+  }
 }
