@@ -23,7 +23,7 @@ export const Hero = () => {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef();
 
-  const images = [netflix, tarjeta1 ,spotify,tarjeta2, canva,tarjeta3, disney, tarjeta4, max, crunchy,paramount,prime, directvgo]; 
+  const images = [netflix, tarjeta1 ,spotify,tarjeta2, canva,tarjeta3, disney, tarjeta4, max, crunchy,paramount,prime]; 
 
   const next = () => {
     setCurrent((prev) => (prev + 1) % images.length);
