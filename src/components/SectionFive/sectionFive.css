@@ -106,7 +106,7 @@
 }
 
 .obsequios-button img {
-  width: 250px;
+  width: 180px;
   display: block;
 }
 
@@ -127,19 +127,18 @@
 
 .popup-content {
   position: relative;
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 75%;
+  max-height: 80%;
   background: #5c5cec;
   border-radius: 20px;
-  padding: 20px;
+  padding: 18px;
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
   animation: slideIn 0.3s ease;
 }
 
 .popup-image {
-  
   max-width: 100%;
-  max-height:80vh;
+  max-height: 65vh;
   border-radius: 12px;
   display: block;
   background: #070625
@@ -224,7 +223,125 @@
   max-width: 100%;
 }
 
-/* Responsive */
+/* ========================================
+   ESTILOS DEL POPUP DE INFORMACIÓN DE PLANES
+   ======================================== */
+
+.popup-info-content {
+  position: relative;
+  max-width: 550px;
+  max-height: 75vh;
+  background: linear-gradient(135deg, #1a1a3e 0%, #2d2d5f 100%);
+  border-radius: 20px;
+  padding: 30px 25px;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+  box-shadow: 0 10px 50px rgba(92, 92, 236, 0.4);
+  border: 2px solid rgba(92, 92, 236, 0.3);
+}
+
+.popup-info-body {
+  padding-right: 8px;
+}
+
+.plan-info-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  color: white;
+  text-align: center;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(92, 92, 236, 0.5);
+}
+
+.plan-info-subtitle {
+  font-size: 0.95rem;
+  color: #e0e0ff;
+  text-align: center;
+  margin-bottom: 1.8rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.plan-info-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  background: rgba(92, 92, 236, 0.15);
+  border-radius: 12px;
+  border-left: 4px solid #5c5cec;
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease;
+}
+
+.plan-info-section:hover {
+  transform: translateX(5px);
+  background: rgba(92, 92, 236, 0.2);
+}
+
+.plan-info-section .section-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  color: white;
+  text-align: left;
+  font-weight: 600;
+}
+
+.plan-info-section .section-subtitle {
+  font-size: 0.9rem;
+  color: #d0d0ff;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.section-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.section-items li {
+  padding: 0.4rem 0;
+  color: #e8e8ff;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: left;
+  padding-left: 1.3rem;
+  position: relative;
+}
+
+.section-items li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #5c5cec;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Scrollbar personalizado para el popup de información */
+.popup-info-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.popup-info-content::-webkit-scrollbar-track {
+  background: rgba(92, 92, 236, 0.1);
+  border-radius: 10px;
+}
+
+.popup-info-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5c5cec 0%, #7c4de3 100%);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.popup-info-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #7c4de3 0%, #5c5cec 100%);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
 @media (max-width: 768px) {
   .section-five h2 {
     font-size: 36px;
@@ -261,6 +378,36 @@
     height: 35px;
     font-size: 20px;
   }
+
+  /* Responsive para popup de información */
+  .popup-info-content {
+    max-width: 90%;
+    padding: 20px 15px;
+    max-height: 85vh;
+  }
+
+  .plan-info-title {
+    font-size: 1.4rem;
+  }
+
+  .plan-info-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.3rem;
+  }
+
+  .plan-info-section {
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .plan-info-section .section-title {
+    font-size: 1rem;
+  }
+
+  .section-items li {
+    font-size: 0.8rem;
+    padding-left: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -294,5 +441,35 @@
     width: 30px;
     height: 30px;
     font-size: 18px;
+  }
+
+  /* Responsive para popup de información en móviles pequeños */
+  .popup-info-content {
+    padding: 18px 12px;
+    max-height: 85vh;
+  }
+
+  .plan-info-title {
+    font-size: 1.2rem;
+  }
+
+  .plan-info-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .plan-info-section {
+    padding: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .plan-info-section .section-title {
+    font-size: 0.95rem;
+  }
+
+  .section-items li {
+    font-size: 0.75rem;
+    padding: 0.4rem 0;
+    padding-left: 1rem;
   }
 }

@@ -12,13 +12,13 @@ import prime from '../../assets/Simplia-Prime-video.png'
 import dezzer from '../../assets/Simplia-Spotify.png'
 import crunchy from '../../assets/Simpli-crunchyroll.png'
 
-import guiaNetflix from '../../assets/GUIA-NETFLIX.jpeg'
-import guiaDisney from '../../assets/GUIA-DISNEY.jpeg'
+import guiaNetflix from '../../assets/GUIA-NETFLIX.jpg'
+import guiaDisney from '../../assets/GUIA-DISNEY.jpg'
 import guiaCanva from '../../assets/GUIA-CANVA.jpeg'
-import guiaMax from '../../assets/GUIA-MAX.jpeg'
+import guiaMax from '../../assets/GUIA-MAX.jpg'
 import guiaParamount from '../../assets/GUIA-PARAMOUNT.jpeg'
 import guiaPrime from '../../assets/GUIA-PRIME.jpeg'
-import guiaSpotify from '../../assets/GUIA-NETFLIX.jpeg'
+import guiaSpotify from '../../assets/GUIA-DEZZER.jpg'
 import guiaCrunchy from '../../assets/GUIA-CRUNCHY.jpeg'
 
 

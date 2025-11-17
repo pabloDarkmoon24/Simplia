@@ -25,6 +25,8 @@ export const SectionFive = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showPopup, setShowPopup] = useState(false);
   const [popupImage, setPopupImage] = useState(null);
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -32,8 +34,9 @@ export const SectionFive = () => {
     
     // Cerrar popup con tecla ESC
     const handleEsc = (e) => {
-      if (e.key === 'Escape' && showPopup) {
+      if (e.key === 'Escape' && (showPopup || showInfoPopup)) {
         closePopup();
+        closeInfoPopup();
       }
     };
     window.addEventListener('keydown', handleEsc);
@@ -42,37 +45,196 @@ export const SectionFive = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [showPopup]);
+  }, [showPopup, showInfoPopup]);
+
+  // Información de los planes
+  const planInfo = {
+    esencial: {
+      title: "📦 Plan Esencial",
+      subtitle: "Disfruta de tus plataformas favoritas con un plan diseñado para uso personal, sin compartir y sin complicaciones.",
+      sections: [
+        {
+          title: "🎬 Netflix – Plan Básico",
+          items: [
+            "✔ Cuenta propia (no compartida)",
+            "✔ Incluye correo y contraseña",
+            "✔ Disponible para uso en Colombia"
+          ]
+        },
+        {
+          title: "🧡 Disney+ Premium",
+          items: [
+            "✔ Acceso premium mediante activación por enlace",
+            "✔ Exclusivo para Smart TV que generen código de activación",
+            "❗ No funciona en dispositivos sin opción de ingresar código"
+          ]
+        },
+        {
+          title: "🎁 Bonos y Obsequios Incluidos",
+          subtitle: "Con tu Plan Esencial recibes acceso gratuito por 1 mes a:",
+          items: [
+            "Canva",
+            "Crunchyroll",
+            "Deezer",
+            "Canales deportivos seleccionados",
+            "Luego del primer mes, cada plataforma tiene un costo de solo $2.000 COP."
+          ]
+        }
+      ]
+    },
+    conectado: {
+      title: "📦 Plan Conectado",
+      subtitle: "Disfruta de tus plataformas favoritas con un plan diseñado para uso personal, sin compartir y sin complicaciones.",
+      sections: [
+        {
+          title: "🎬 Netflix – Plan Básico",
+          items: [
+            "✔ Cuenta propia (no compartida)",
+            "✔ Incluye correo y contraseña",
+            "✔ Funciona en Colombia"
+          ]
+        },
+        {
+          title: "🧡 Disney+ Premium",
+          items: [
+            "✔ Acceso premium mediante activación por enlace",
+            "✔ Compatible únicamente con Smart TV que generen código de activación",
+            "❗ No funciona en dispositivos que no permitan ingresar código"
+          ]
+        },
+        {
+          title: "🔵 Prime Video",
+          items: [
+            "✔ Activación mediante enlace",
+            "✔ Solo compatible con Smart TV que generen código",
+            "❗ No disponible para dispositivos sin ingreso por código"
+          ]
+        },
+        {
+          title: "🎁 Bonos y Obsequios Incluidos",
+          subtitle: "Con tu Plan Conectado recibes acceso gratuito por 2 meses a:",
+          items: [
+            "Canva",
+            "Crunchyroll",
+            "Deezer",
+            "Canales deportivos seleccionados",
+            "Luego del segundo mes, cada plataforma tiene un costo de solo $2.000 COP."
+          ]
+        }
+      ]
+    },
+    total: {
+      title: "📦 Plan Total",
+      subtitle: "Disfruta de todas tus plataformas favoritas con un plan completo, personal y sin compartir.",
+      sections: [
+        {
+          title: "🎬 Netflix – Plan Básico",
+          items: [
+            "✔ Cuenta propia (no compartida)",
+            "✔ Incluye correo y contraseña",
+            "✔ Funciona en Colombia"
+          ]
+        },
+        {
+          title: "🧡 Disney+ Premium",
+          items: [
+            "✔ Acceso premium mediante activación por enlace",
+            "✔ Compatible únicamente con Smart TV que generen código de activación",
+            "❗ No funciona en dispositivos que no permitan ingresar código",
+            "📺 Incluye 1 pantalla"
+          ]
+        },
+        {
+          title: "🔵 Prime Video",
+          items: [
+            "✔ Activación mediante enlace",
+            "✔ Solo compatible con Smart TV que generen código",
+            "❗ No disponible en dispositivos sin ingreso por código",
+            "📺 Incluye 1 pantalla"
+          ]
+        },
+        {
+          title: "💜 Max",
+          items: [
+            "✔ Activación mediante enlace",
+            "✔ Solo compatible con Smart TV que generen código",
+            "❗ No disponible en dispositivos sin ingreso por código",
+            "📺 Incluye 1 pantalla"
+          ]
+        },
+        {
+          title: "🟣 Paramount+",
+          items: [
+            "✔ Se entrega usuario y contraseña",
+            "📺 Incluye 1 pantalla"
+          ]
+        },
+        {
+          title: "🎁 Bonos y Obsequios Incluidos",
+          subtitle: "Con tu Plan Total recibes acceso gratuito por 3 meses a:",
+          items: [
+            "Canva",
+            "Crunchyroll",
+            "Deezer",
+            "Canales deportivos seleccionados",
+            "Luego del tercer mes, cada plataforma tiene un costo de solo $2.000 COP."
+          ]
+        }
+      ]
+    }
+  };
 
   // Funciones para manejar los clicks de "conocer más"
   const handleConocerMasConectado = () => {
-    // Aquí puedes poner la URL o acción que quieras
-    console.log("Conocer más Plan Conectado");
+    setSelectedPlan(planInfo.conectado);
+    setShowInfoPopup(true);
   };
 
   const handleConocerMasEsencial = () => {
-    // Aquí puedes poner la URL o acción que quieras
-    console.log("Conocer más Plan Esencial");
+    setSelectedPlan(planInfo.esencial);
+    setShowInfoPopup(true);
   };
 
   const handleConocerMasTotal = () => {
-    // Aquí puedes poner la URL o acción que quieras
-    console.log("Conocer más Plan Total");
+    setSelectedPlan(planInfo.total);
+    setShowInfoPopup(true);
   };
 
   const handleCuentasCompletas = () => {
-    // Aquí puedes poner la URL o acción que quieras
-    console.log("Cuentas Completas");
+    // Abrir el formulario de Google Forms para cuentas completas
+    window.open('https://forms.gle/JKk6RM1AByfaQWAb8', '_blank');
+  };
+
+  // Funciones para manejar los clicks de los botones "Lo quiero"
+  const handleLoQuieroConectado = () => {
+    const numeroWhatsApp = "573000000000"; // Reemplaza con tu número de WhatsApp (código de país + número sin +)
+    const mensaje = "Hola! Quiero adquirir el Plan Conectado 🎬";
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleLoQuieroEsencial = () => {
+    const numeroWhatsApp = "573000000000"; // Reemplaza con tu número de WhatsApp (código de país + número sin +)
+    const mensaje = "Hola! Quiero adquirir el Plan Esencial 🎬";
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleLoQuieroTotal = () => {
+    const numeroWhatsApp = "573000000000"; // Reemplaza con tu número de WhatsApp (código de país + número sin +)
+    const mensaje = "Hola! Quiero adquirir el Plan Total 🎬";
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
   };
 
   // Funciones para abrir popup con la imagen de obsequios correspondiente
   const handleObsequiosConectado = () => {
-    setPopupImage(popupObsequioEsencial);
+    setPopupImage(popupObsequioConectado);
     setShowPopup(true);
   };
 
   const handleObsequiosEsencial = () => {
-    setPopupImage(popupObsequioConectado);
+    setPopupImage(popupObsequioEsencial);
     setShowPopup(true);
   };
 
@@ -86,6 +248,11 @@ export const SectionFive = () => {
     setPopupImage(null);
   };
 
+  const closeInfoPopup = () => {
+    setShowInfoPopup(false);
+    setSelectedPlan(null);
+  };
+
   return (
     <section className="section-five" id="membresias">
       <h2 className="section-title">Membresias</h2>
@@ -95,13 +262,13 @@ export const SectionFive = () => {
         {/* Plan Conectado */}
         <div className="plan-card">
           <img src={conectado} alt="conectado" className="plan-image" />
-          <span className="conocer-mas-link" onClick={handleConocerMasConectado}>
+          <span className="conocer-mas-link" onClick={handleConocerMasEsencial}>
             *Conocer más*
           </span>
-          <button className="plan-button">
+          <button className="plan-button" onClick={handleLoQuieroEsencial}>
             <img src={btn2} alt="boton morado" />
           </button>
-          <button className="obsequios-button" onClick={handleObsequiosConectado}>
+          <button className="obsequios-button" onClick={handleObsequiosEsencial}>
             <img src={botonObsequios} alt="Obsequios" />
           </button>
         </div>
@@ -109,13 +276,13 @@ export const SectionFive = () => {
         {/* Plan Esencial */}
         <div className="plan-card">
           <img src={essencial} alt="essencial" className="plan-image" />
-          <span className="conocer-mas-link" onClick={handleConocerMasEsencial}>
+          <span className="conocer-mas-link" onClick={ handleConocerMasConectado}>
             *Conocer más*
           </span>
-          <button className="plan-button">
+          <button className="plan-button" onClick={ handleLoQuieroConectado}>
             <img src={btn1} alt="boton verde" />
           </button>
-          <button className="obsequios-button" onClick={handleObsequiosEsencial}>
+          <button className="obsequios-button" onClick={ handleObsequiosConectado}>
             <img src={botonObsequios} alt="Obsequios" />
           </button>
         </div>
@@ -126,7 +293,7 @@ export const SectionFive = () => {
           <span className="conocer-mas-link" onClick={handleConocerMasTotal}>
             *Conocer más*
           </span>
-          <button className="plan-button">
+          <button className="plan-button" onClick={handleLoQuieroTotal}>
             <img src={btn2} alt="boton morado" />
           </button>
           <button className="obsequios-button" onClick={handleObsequiosTotal}>
@@ -153,6 +320,35 @@ export const SectionFive = () => {
               ✕
             </button>
             <img src={popupImage} alt="Obsequios" className="popup-image" />
+          </div>
+        </div>
+      )}
+
+      {/* Popup para mostrar información del plan */}
+      {showInfoPopup && selectedPlan && (
+        <div className="popup-overlay" onClick={closeInfoPopup}>
+          <div className="popup-info-content" onClick={(e) => e.stopPropagation()}>
+            <button className="popup-close" onClick={closeInfoPopup}>
+              ✕
+            </button>
+            <div className="popup-info-body">
+              <h2 className="plan-info-title">{selectedPlan.title}</h2>
+              <p className="plan-info-subtitle">{selectedPlan.subtitle}</p>
+              
+              {selectedPlan.sections.map((section, index) => (
+                <div key={index} className="plan-info-section">
+                  <h3 className="section-title">{section.title}</h3>
+                  {section.subtitle && (
+                    <p className="section-subtitle">{section.subtitle}</p>
+                  )}
+                  <ul className="section-items">
+                    {section.items.map((item, itemIndex) => (
+                      <li key={itemIndex}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
