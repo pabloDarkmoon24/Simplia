@@ -48,141 +48,144 @@ export const SectionFive = () => {
   }, [showPopup, showInfoPopup]);
 
   // Información de los planes
-  const planInfo = {
-    esencial: {
-      title: "📦 Plan Esencial",
-      subtitle: "Disfruta de tus plataformas favoritas con un plan diseñado para uso personal, sin compartir y sin complicaciones.",
-      sections: [
-        {
-          title: "🎬 Netflix – Plan Básico",
-          items: [
-            "✔ Cuenta propia (no compartida)",
-            "✔ Incluye correo y contraseña",
-            "✔ Disponible para uso en Colombia"
-          ]
-        },
-        {
-          title: "🧡 Disney+ Premium",
-          items: [
-            "✔ Acceso premium mediante activación por enlace",
-            "✔ Exclusivo para Smart TV que generen código de activación",
-            "❗ No funciona en dispositivos sin opción de ingresar código"
-          ]
-        },
-        {
-          title: "🎁 Bonos y Obsequios Incluidos",
-          subtitle: "Con tu Plan Esencial recibes acceso gratuito por 1 mes a:",
-          items: [
-            "Canva",
-            "Crunchyroll",
-            "Deezer",
-            "Canales deportivos seleccionados",
-            "Luego del primer mes, cada plataforma tiene un costo de solo $2.000 COP."
-          ]
-        }
-      ]
-    },
-    conectado: {
-      title: "📦 Plan Conectado",
-      subtitle: "Disfruta de tus plataformas favoritas con un plan diseñado para uso personal, sin compartir y sin complicaciones.",
-      sections: [
-        {
-          title: "🎬 Netflix – Plan Básico",
-          items: [
-            "✔ Cuenta propia (no compartida)",
-            "✔ Incluye correo y contraseña",
-            "✔ Funciona en Colombia"
-          ]
-        },
-        {
-          title: "🧡 Disney+ Premium",
-          items: [
-            "✔ Acceso premium mediante activación por enlace",
-            "✔ Compatible únicamente con Smart TV que generen código de activación",
-            "❗ No funciona en dispositivos que no permitan ingresar código"
-          ]
-        },
-        {
-          title: "🔵 Prime Video",
-          items: [
-            "✔ Activación mediante enlace",
-            "✔ Solo compatible con Smart TV que generen código",
-            "❗ No disponible para dispositivos sin ingreso por código"
-          ]
-        },
-        {
-          title: "🎁 Bonos y Obsequios Incluidos",
-          subtitle: "Con tu Plan Conectado recibes acceso gratuito por 2 meses a:",
-          items: [
-            "Canva",
-            "Crunchyroll",
-            "Deezer",
-            "Canales deportivos seleccionados",
-            "Luego del segundo mes, cada plataforma tiene un costo de solo $2.000 COP."
-          ]
-        }
-      ]
-    },
-    total: {
-      title: "📦 Plan Total",
-      subtitle: "Disfruta de todas tus plataformas favoritas con un plan completo, personal y sin compartir.",
-      sections: [
-        {
-          title: "🎬 Netflix – Plan Básico",
-          items: [
-            "✔ Cuenta propia (no compartida)",
-            "✔ Incluye correo y contraseña",
-            "✔ Funciona en Colombia"
-          ]
-        },
-        {
-          title: "🧡 Disney+ Premium",
-          items: [
-            "✔ Acceso premium mediante activación por enlace",
-            "✔ Compatible únicamente con Smart TV que generen código de activación",
-            "❗ No funciona en dispositivos que no permitan ingresar código",
-            "📺 Incluye 1 pantalla"
-          ]
-        },
-        {
-          title: "🔵 Prime Video",
-          items: [
-            "✔ Activación mediante enlace",
-            "✔ Solo compatible con Smart TV que generen código",
-            "❗ No disponible en dispositivos sin ingreso por código",
-            "📺 Incluye 1 pantalla"
-          ]
-        },
-        {
-          title: "💜 Max",
-          items: [
-            "✔ Activación mediante enlace",
-            "✔ Solo compatible con Smart TV que generen código",
-            "❗ No disponible en dispositivos sin ingreso por código",
-            "📺 Incluye 1 pantalla"
-          ]
-        },
-        {
-          title: "🟣 Paramount+",
-          items: [
-            "✔ Se entrega usuario y contraseña",
-            "📺 Incluye 1 pantalla"
-          ]
-        },
-        {
-          title: "🎁 Bonos y Obsequios Incluidos",
-          subtitle: "Con tu Plan Total recibes acceso gratuito por 3 meses a:",
-          items: [
-            "Canva",
-            "Crunchyroll",
-            "Deezer",
-            "Canales deportivos seleccionados",
-            "Luego del tercer mes, cada plataforma tiene un costo de solo $2.000 COP."
-          ]
-        }
-      ]
-    }
-  };
+ const planInfo = {
+  esencial: {
+    title: "📦 Plan Esencial\nPANTALLAS",
+    subtitle: "Disfruta de tus plataformas favoritas con un plan diseñado para uso personal, sin compartir y sin complicaciones.",
+    sections: [
+      {
+        title: "🎬 Netflix – Plan Básico",
+        items: [
+          "✔ Cuenta propia (no compartida)",
+          "✔ Incluye correo y contraseña",
+          "✔ Disponible para uso en Colombia"
+        ]
+      },
+      {
+        title: "🧡 Disney+ Premium",
+        items: [
+          "✔ Acceso premium mediante activación por enlace",
+          "✔ Exclusivo para Smart TV que generen código de activación",
+          "❗ No funciona en dispositivos sin opción de ingresar código"
+        ]
+      },
+      {
+        title: "🎁 Bonos y Obsequios Incluidos",
+        subtitle: "Con tu Plan Esencial recibes acceso gratuito por 1 mes a:",
+        items: [
+          "Canva",
+          "Crunchyroll",
+          "Deezer",
+          "Canales deportivos seleccionados",
+          "Luego del primer mes, cada plataforma tiene un costo de solo $2.000 COP."
+        ]
+      }
+    ]
+  },
+
+  conectado: {
+    title: "📦 Plan Conectado\nPANTALLAS",
+    subtitle: "Disfruta de tus plataformas favoritas con un plan diseñado para uso personal, sin compartir y sin complicaciones.",
+    sections: [
+      {
+        title: "🎬 Netflix – Plan Básico",
+        items: [
+          "✔ Cuenta propia (no compartida)",
+          "✔ Incluye correo y contraseña",
+          "✔ Funciona en Colombia"
+        ]
+      },
+      {
+        title: "🧡 Disney+ Premium PANTALLAS",
+        items: [
+          "✔ Acceso premium mediante activación por enlace",
+          "✔ Compatible únicamente con Smart TV que generen código de activación",
+          "❗ No funciona en dispositivos que no permitan ingresar código"
+        ]
+      },
+      {
+        title: "🔵 Prime Video",
+        items: [
+          "✔ Activación mediante enlace",
+          "✔ Solo compatible con Smart TV que generen código",
+          "❗ No disponible para dispositivos sin ingreso por código"
+        ]
+      },
+      {
+        title: "🎁 Bonos y Obsequios Incluidos",
+        subtitle: "Con tu Plan Conectado recibes acceso gratuito por 2 meses a:",
+        items: [
+          "Canva",
+          "Crunchyroll",
+          "Deezer",
+          "Canales deportivos seleccionados",
+          "Luego del segundo mes, cada plataforma tiene un costo de solo $2.000 COP."
+        ]
+      }
+    ]
+  },
+
+  total: {
+    title: "📦 Plan Total\nPANTALLAS",
+    subtitle: "Disfruta de todas tus plataformas favoritas con un plan completo, personal y sin compartir.",
+    sections: [
+      {
+        title: "🎬 Netflix – Plan Básico",
+        items: [
+          "✔ Cuenta propia (no compartida)",
+          "✔ Incluye correo y contraseña",
+          "✔ Funciona en Colombia"
+        ]
+      },
+      {
+        title: "🧡 Disney+ Premium",
+        items: [
+          "✔ Acceso premium mediante activación por enlace",
+          "✔ Compatible únicamente con Smart TV que generen código de activación",
+          "❗ No funciona en dispositivos que no permitan ingresar código",
+          "📺 Incluye 1 pantalla"
+        ]
+      },
+      {
+        title: "🔵 Prime Video",
+        items: [
+          "✔ Activación mediante enlace",
+          "✔ Solo compatible con Smart TV que generen código",
+          "❗ No disponible en dispositivos sin ingreso por código",
+          "📺 Incluye 1 pantalla"
+        ]
+      },
+      {
+        title: "💜 Max",
+        items: [
+          "✔ Activación mediante enlace",
+          "✔ Solo compatible con Smart TV que generen código",
+          "❗ No disponible en dispositivos sin ingreso por código",
+          "📺 Incluye 1 pantalla"
+        ]
+      },
+      {
+        title: "🟣 Paramount+",
+        items: [
+          "✔ Se entrega usuario y contraseña",
+          "📺 Incluye 1 pantalla"
+        ]
+      },
+      {
+        title: "🎁 Bonos y Obsequios Incluidos",
+        subtitle: "Con tu Plan Total recibes acceso gratuito por 3 meses a:",
+        items: [
+          "Canva",
+          "Crunchyroll",
+          "Deezer",
+          "Canales deportivos seleccionados",
+          "Luego del tercer mes, cada plataforma tiene un costo de solo $2.000 COP."
+        ]
+      }
+    ]
+  }
+};
+
 
   // Funciones para manejar los clicks de "conocer más"
   const handleConocerMasConectado = () => {
