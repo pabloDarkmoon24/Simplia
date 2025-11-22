@@ -1,4 +1,5 @@
 .logo {
+  
   width: 100%;
   max-width: 280px;     
   height: auto;        
@@ -6,16 +7,17 @@
   display: block;
   margin: 0 auto;
   padding: 10px 0;
+  margin-top: 100px;
 }
 .hero-section {
   background: url("../../assets/bg-hero.png") center/cover no-repeat;
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   box-sizing: border-box;
-  width: 100vw;
+  width: 99.4vw;
   margin-left: calc(-50vw + 50%);
   position: relative;
   left: 0;

@@ -75,7 +75,7 @@ export const Hero = () => {
 
   // Función para manejar el click del botón de membresía
   const handleMembresiaClick = () => {
-    const numeroWhatsApp = "573000000000"; // ⚠️ REEMPLAZA CON TU NÚMERO DE WHATSAPP
+    const numeroWhatsApp = "573170695865"; // ⚠️ REEMPLAZA CON TU NÚMERO DE WHATSAPP
     const mensaje = "Hola! Estoy interesado en conocer las membresías de Simplia 🎬";
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');

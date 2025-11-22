@@ -1,34 +1,32 @@
-import './App.css'
-import { Hero } from './components/Hero/Hero'
-import { SectionEight } from './components/SectionEight/sectionEight'
-import { SectionFive } from './components/SectionFive/sectionFive'
-import { SectionFour } from './components/SectionFour/sectionFour'
-import { SectionNine } from './components/SectionNine/sectionNine'
-import { SectionSeven } from './components/SectionSeven/sectionSeven'
-import { SectionSix } from './components/SectionSix/sectionSix'
-import { SectionTreee } from './components/SectionTree/sectionThree'
-import { SectionTwo } from './components/SectionTwo/Sectiontwo'
-import { WhatsAppButton } from './components/WhatsAppButton/Whatsappbutton'
-
-
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { LandingPage } from './pages/LandingPage';
+import { AdminLogin } from './pages/Admin/AdminLogin';
+import { AdminDashboard } from './pages/Admin/AdminDashboard';
+import { DistribuidorLogin } from './pages/Distribuidor/DistribuidorLogin';
+import { DistribuidorDashboard } from './pages/Distribuidor/DistribuidorDashboard';
 
 
 function App() {
   return (
-    <>
-      <Hero />
-      <SectionTwo/>
-      <SectionTreee/>
-      <SectionFour/>
-      <SectionFive/>
-      <SectionSix/>
-      <SectionSeven/>
-      <SectionEight/>
-      <SectionNine/>
-      <WhatsAppButton />
-    </>
-  )
+    <Router>
+      <Routes>
+        {/* Ruta raíz redirige al login de admin */}
+        <Route path="/" element={<Navigate to="/admin/login" replace />} />
+        
+        {/* Rutas de Admin */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        
+        {/* Rutas de Distribuidor */}
+        <Route path="/distribuidor/login" element={<DistribuidorLogin />} />
+        <Route path="/distribuidor/dashboard" element={<DistribuidorDashboard />} />
+        
+        {/* Landing con ID de distribuidor */}
+        <Route path="/:distribuidorId" element={<LandingPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
-
+export default App;
