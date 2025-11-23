@@ -1,7 +1,7 @@
 // src/pages/Distribuidor/MisComisiones.jsx
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
+import { db, auth } from '../../firebase/config';
 
 export const MisComisiones = ({ distribuidorId }) => {
   const [leads, setLeads] = useState([]);
@@ -18,20 +18,35 @@ export const MisComisiones = ({ distribuidorId }) => {
 
   const cargarDatos = async () => {
     try {
-      // Cargar leads con comisión
-      const leadsRef = collection(db, 'leads');
-      const qLeads = query(
-        leadsRef,
-        where('distribuidorId', '==', distribuidorId),
-        where('estado', '==', 'compra_ejecutada')
-      );
+      // Obtener UID del usuario autenticado
+      const user = auth.currentUser;
       
-      const snapshotLeads = await getDocs(qLeads);
+      if (!user) {
+        console.error('❌ No hay usuario autenticado');
+        setLoading(false);
+        return;
+      }
+
+      const distribuidorUID = user.uid;
+      console.log('🔍 Cargando datos para distribuidor UID:', distribuidorUID);
+
+      // ========================================
+      // CARGAR LEADS CON COMISIÓN
+      // ========================================
+      console.log('📝 Cargando leads...');
+      const leadsRef = collection(db, 'leads');
+      const snapshotLeads = await getDocs(leadsRef);
       const leadsData = [];
 
       snapshotLeads.forEach((doc) => {
         const data = doc.data();
-        if (data.comision?.monto > 0) {
+        
+        // Filtrar por distribuidorId, estado y que tenga comisión
+        if (
+          data.distribuidorId === distribuidorUID &&
+          data.estado === 'compra_ejecutada' &&
+          data.comision?.monto > 0
+        ) {
           leadsData.push({
             id: doc.id,
             ...data
@@ -40,43 +55,51 @@ export const MisComisiones = ({ distribuidorId }) => {
       });
 
       leadsData.sort((a, b) => new Date(b.fechaCompra) - new Date(a.fechaCompra));
+      console.log('✅ Leads cargados:', leadsData.length);
       setLeads(leadsData);
 
-      // Cargar historial de pagos
+      // ========================================
+      // CARGAR HISTORIAL DE PAGOS
+      // ========================================
+      console.log('💰 Cargando historial de pagos...');
       const pagosRef = collection(db, 'pagosComisiones');
-      const qPagos = query(
-        pagosRef,
-        where('distribuidorId', '==', distribuidorId)
-      );
-
-      const snapshotPagos = await getDocs(qPagos);
+      const snapshotPagos = await getDocs(pagosRef);
       const pagosData = [];
 
       snapshotPagos.forEach((doc) => {
-        pagosData.push({
-          id: doc.id,
-          ...doc.data()
-        });
+        const data = doc.data();
+        
+        // Filtrar por distribuidorId
+        if (data.distribuidorId === distribuidorUID) {
+          pagosData.push({
+            id: doc.id,
+            ...data
+          });
+        }
       });
 
       pagosData.sort((a, b) => new Date(b.fechaPago) - new Date(a.fechaPago));
+      console.log('✅ Pagos cargados:', pagosData.length);
       setPagos(pagosData);
 
-      // Cargar solicitudes de retiro (pendientes y rechazadas)
+      // ========================================
+      // CARGAR SOLICITUDES DE RETIRO
+      // ========================================
+      console.log('📋 Cargando solicitudes de retiro...');
       const solicitudesRef = collection(db, 'solicitudesRetiro');
-      const qSolicitudes = query(
-        solicitudesRef,
-        where('distribuidorId', '==', distribuidorId)
-      );
-
-      const snapshotSolicitudes = await getDocs(qSolicitudes);
+      const snapshotSolicitudes = await getDocs(solicitudesRef);
       const solicitudesData = [];
 
       snapshotSolicitudes.forEach((doc) => {
-        solicitudesData.push({
-          id: doc.id,
-          ...doc.data()
-        });
+        const data = doc.data();
+        
+        // Filtrar por distribuidorId
+        if (data.distribuidorId === distribuidorUID) {
+          solicitudesData.push({
+            id: doc.id,
+            ...data
+          });
+        }
       });
 
       solicitudesData.sort((a, b) => {
@@ -85,10 +108,11 @@ export const MisComisiones = ({ distribuidorId }) => {
         return dateB - dateA;
       });
 
+      console.log('✅ Solicitudes cargadas:', solicitudesData.length);
       setSolicitudesRetiro(solicitudesData);
 
     } catch (error) {
-      console.error('Error al cargar comisiones:', error);
+      console.error('❌ Error al cargar comisiones:', error);
     } finally {
       setLoading(false);
     }
@@ -124,7 +148,8 @@ export const MisComisiones = ({ distribuidorId }) => {
     }).format(valor);
   };
 
-  const leadsPendientes = leads.filter(l => !l.comision?.pagada);
+  const leadsPendientes = leads.filter(l => !l.comision?.pagada && !l.comision?.enProcesoRetiro);
+  const leadsEnProceso = leads.filter(l => !l.comision?.pagada && l.comision?.enProcesoRetiro);
   
   const solicitudesPendientes = solicitudesRetiro.filter(s => s.estado === 'pendiente');
   const solicitudesRechazadas = solicitudesRetiro.filter(s => s.estado === 'rechazada');
@@ -160,7 +185,10 @@ export const MisComisiones = ({ distribuidorId }) => {
         
         {leadsPendientes.length === 0 ? (
           <div className="empty-state-small">
-            <p>No tienes comisiones pendientes</p>
+            <p>No tienes comisiones pendientes disponibles para retiro</p>
+            {leadsEnProceso.length > 0 && (
+              <p>Tienes {leadsEnProceso.length} comisión(es) en proceso de retiro</p>
+            )}
           </div>
         ) : (
           <div className="tabla-comisiones">
@@ -201,6 +229,88 @@ export const MisComisiones = ({ distribuidorId }) => {
           </div>
         )}
       </div>
+
+      {/* Comisiones en Proceso de Retiro */}
+      {leadsEnProceso.length > 0 && (
+        <div className="comisiones-section">
+          <h3>⏰ En Proceso de Retiro</h3>
+          <p className="subtitle">Estas comisiones están incluidas en solicitudes pendientes de aprobación</p>
+          
+          <div className="tabla-comisiones">
+            <table>
+              <thead>
+                <tr>
+                  <th>Código Lead</th>
+                  <th>Cliente</th>
+                  <th>Producto</th>
+                  <th>Comisión</th>
+                  <th>Fecha Solicitud</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leadsEnProceso.map((lead) => (
+                  <tr key={lead.id}>
+                    <td><code>{lead.codigoUnico}</code></td>
+                    <td>{lead.nombreCliente}</td>
+                    <td>{lead.productoInteres}</td>
+                    <td className="comision-monto">
+                      {formatearMoneda(lead.comision?.monto || 0)}
+                    </td>
+                    <td>{formatearFecha(lead.comision?.fechaSolicitudRetiro)}</td>
+                  </tr>
+                ))}
+                <tr className="total-row">
+                  <td colSpan="3" style={{ textAlign: 'right', fontWeight: 700 }}>
+                    TOTAL EN PROCESO:
+                  </td>
+                  <td className="total-pendiente" colSpan="2">
+                    {formatearMoneda(
+                      leadsEnProceso.reduce((sum, lead) => sum + (lead.comision?.monto || 0), 0)
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Solicitudes Pendientes */}
+      {solicitudesPendientes.length > 0 && (
+        <div className="comisiones-section">
+          <h3>📋 Solicitudes Pendientes de Aprobación</h3>
+          
+          <div className="historial-pagos-grid">
+            {solicitudesPendientes.map((solicitud) => (
+              <div key={solicitud.id} className="pago-card pendiente">
+                <div className="pago-card-header">
+                  <span className="pago-fecha">
+                    {formatearFecha(solicitud.fechaSolicitud)}
+                  </span>
+                  <span className="badge badge-pendiente">
+                    ⏳ Pendiente
+                  </span>
+                </div>
+                <div className="pago-card-body">
+                  <div className="pago-monto">
+                    {formatearMoneda(solicitud.monto)}
+                  </div>
+                  <div className="pago-detalles">
+                    <div className="pago-detalle">
+                      <span className="label">Leads incluidos:</span>
+                      <span className="value">{solicitud.leadsIncluidos?.length || 0}</span>
+                    </div>
+                    <div className="pago-detalle">
+                      <span className="label">Estado:</span>
+                      <span className="value">Esperando aprobación del administrador</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Historial de Pagos y Rechazos */}
       <div className="comisiones-section">
@@ -328,7 +438,15 @@ export const MisComisiones = ({ distribuidorId }) => {
           </span>
         </div>
         <div className="resumen-item">
-          <span className="resumen-label">Pendiente de Pago:</span>
+          <span className="resumen-label">En Proceso de Retiro:</span>
+          <span className="resumen-valor">
+            {formatearMoneda(
+              leadsEnProceso.reduce((sum, lead) => sum + (lead.comision?.monto || 0), 0)
+            )}
+          </span>
+        </div>
+        <div className="resumen-item">
+          <span className="resumen-label">Disponible para Retiro:</span>
           <span className="resumen-valor pendiente">
             {formatearMoneda(
               leadsPendientes.reduce((sum, lead) => sum + (lead.comision?.monto || 0), 0)
@@ -337,7 +455,7 @@ export const MisComisiones = ({ distribuidorId }) => {
         </div>
       </div>
 
-      {/* MODAL ACTUALIZADO: Ver comprobante en Base64 */}
+      {/* Modal Ver Comprobante */}
       {showComprobanteModal && comprobanteSeleccionado && (
         <div className="modal-overlay-dist" onClick={() => setShowComprobanteModal(false)}>
           <div className="modal-comprobante-dist" onClick={(e) => e.stopPropagation()}>

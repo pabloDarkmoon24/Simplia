@@ -288,35 +288,55 @@ export const SolicitudesRetiro = ({ onUpdate }) => {
     }
   };
 
-  const rechazarSolicitud = async (solicitud) => {
-    const motivo = window.prompt('Ingresa el motivo del rechazo:');
+const rechazarSolicitud = async (solicitud) => {
+  const motivo = window.prompt('Ingresa el motivo del rechazo:');
+  
+  if (!motivo || motivo.trim() === '') return;
+
+  setProcesando(solicitud.id);
+
+  try {
+    console.log('❌ Rechazando solicitud:', solicitud.id);
+
+    // 🔓 PASO 1: DESBLOQUEAR LOS LEADS (devolver disponibilidad)
+    console.log('🔓 Desbloqueando leads para que puedan solicitar retiro de nuevo...');
     
-    if (!motivo || motivo.trim() === '') return;
-
-    setProcesando(solicitud.id);
-
-    try {
-      const solicitudRef = doc(db, 'solicitudesRetiro', solicitud.id);
-      
-      await updateDoc(solicitudRef, {
-        estado: 'rechazada',
-        motivoRechazo: motivo.trim(),
-        fechaRechazo: new Date().toISOString(),
-        rechazadoPor: auth.currentUser?.email || 'admin'
+    const desbloquearPromises = solicitud.leadsIncluidos.map(async (lead) => {
+      const leadRef = doc(db, 'leads', lead.leadId);
+      return updateDoc(leadRef, {
+        'comision.enProcesoRetiro': false,
+        'comision.solicitudRetiroId': null,
+        'comision.fechaSolicitudRetiro': null
       });
+    });
 
-      mostrarNotificacion('success', '✅ Solicitud rechazada correctamente');
-      await cargarSolicitudes();
-      
-      if (onUpdate) onUpdate();
+    await Promise.all(desbloquearPromises);
+    console.log('✅ Leads desbloqueados - ahora pueden volver a solicitar retiro');
 
-    } catch (error) {
-      console.error('Error al rechazar solicitud:', error);
-      mostrarNotificacion('error', '❌ Error al rechazar solicitud');
-    } finally {
-      setProcesando(null);
-    }
-  };
+    // 📝 PASO 2: MARCAR SOLICITUD COMO RECHAZADA
+    const solicitudRef = doc(db, 'solicitudesRetiro', solicitud.id);
+    
+    await updateDoc(solicitudRef, {
+      estado: 'rechazada',
+      motivoRechazo: motivo.trim(),
+      fechaRechazo: new Date().toISOString(),
+      rechazadoPor: auth.currentUser?.email || 'admin'
+    });
+
+    console.log('✅ Solicitud marcada como rechazada');
+
+    mostrarNotificacion('success', '✅ Solicitud rechazada. Los leads están disponibles de nuevo para el distribuidor.');
+    await cargarSolicitudes();
+    
+    if (onUpdate) onUpdate();
+
+  } catch (error) {
+    console.error('❌ Error al rechazar solicitud:', error);
+    mostrarNotificacion('error', '❌ Error al rechazar solicitud');
+  } finally {
+    setProcesando(null);
+  }
+};
 
   const formatearMoneda = (valor) => {
     return new Intl.NumberFormat('es-CO', {

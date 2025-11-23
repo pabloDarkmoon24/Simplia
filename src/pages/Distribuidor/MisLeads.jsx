@@ -1,22 +1,35 @@
 // src/pages/Distribuidor/MisLeads.jsx
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { auth, db } from '../../firebase/config';
 
 export const MisLeads = ({ distribuidorId }) => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    cargarLeads();
+    if (distribuidorId) {
+      cargarLeads();
+    }
   }, [distribuidorId]);
 
   const cargarLeads = async () => {
     try {
+      console.log('📝 Cargando leads para distribuidor:', distribuidorId);
+
+      const user = auth.currentUser;
+      if (!user) {
+        console.error('❌ No hay usuario autenticado');
+        setError('Debes iniciar sesión');
+        setLoading(false);
+        return;
+      }
+
       const leadsRef = collection(db, 'leads');
       const q = query(
         leadsRef,
-        where('distribuidorId', '==', distribuidorId)
+        where('distribuidorId', '==', user.uid)
       );
       
       const snapshot = await getDocs(q);
@@ -32,9 +45,13 @@ export const MisLeads = ({ distribuidorId }) => {
       // Ordenar por fecha más reciente
       leadsData.sort((a, b) => new Date(b.fechaHora) - new Date(a.fechaHora));
 
+      console.log('✅ Leads cargados:', leadsData.length);
       setLeads(leadsData);
+      setError(null);
+
     } catch (error) {
-      console.error('Error al cargar leads:', error);
+      console.error('❌ Error al cargar leads:', error);
+      setError('Error al cargar leads');
     } finally {
       setLoading(false);
     }

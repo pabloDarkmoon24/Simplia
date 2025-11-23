@@ -1,7 +1,8 @@
 // src/pages/Distribuidor/CambiarPassword.jsx
 import { useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { db, auth } from '../../firebase/config';
 
 export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
   const [passwordActual, setPasswordActual] = useState('');
@@ -53,19 +54,48 @@ export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
       return;
     }
 
+    // Obtener usuario autenticado
+    const user = auth.currentUser;
+    
+    if (!user) {
+      mostrarNotificacion('error', 'Sesión no válida');
+      return;
+    }
+
     setCambiando(true);
 
     try {
-      // Verificar que la contraseña actual sea correcta
-      // (simulación - en producción deberías validar contra la DB)
-      const distribuidorRef = doc(db, 'distribuidores', distribuidorId);
+      console.log('🔒 Iniciando cambio de contraseña...');
+
+      // PASO 1: Re-autenticar al usuario con su contraseña actual
+      console.log('🔑 Re-autenticando usuario...');
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        passwordActual
+      );
+
+      await reauthenticateWithCredential(user, credential);
+      console.log('✅ Usuario re-autenticado correctamente');
+
+      // PASO 2: Cambiar la contraseña en Firebase Authentication
+      console.log('🔄 Actualizando contraseña en Firebase Auth...');
+      await updatePassword(user, passwordNueva);
+      console.log('✅ Contraseña actualizada en Firebase Auth');
+
+      // PASO 3: Actualizar metadatos en Firestore
+      console.log('📝 Actualizando metadatos en Firestore...');
+      const distribuidorRef = doc(db, 'distribuidores', user.uid);
       
-      // Actualizar la contraseña en Firestore
-      await updateDoc(distribuidorRef, {
-        password: passwordNueva,
-        ultimoCambioPassword: new Date().toISOString(),
-        passwordCambiadaPorUsuario: true
-      });
+      await setDoc(
+        distribuidorRef,
+        {
+          ultimoCambioPassword: new Date().toISOString(),
+          passwordCambiadaPorUsuario: true
+        },
+        { merge: true }
+      );
+
+      console.log('✅ Contraseña cambiada exitosamente');
 
       mostrarNotificacion('success', '✅ Contraseña actualizada correctamente');
       
@@ -75,8 +105,22 @@ export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
       setPasswordConfirmar('');
 
     } catch (error) {
-      console.error('Error al cambiar contraseña:', error);
-      mostrarNotificacion('error', '❌ Error al cambiar la contraseña');
+      console.error('❌ Error al cambiar contraseña:', error);
+      
+      // Manejar errores específicos de Firebase Auth
+      let mensajeError = 'Error al cambiar la contraseña';
+      
+      if (error.code === 'auth/wrong-password') {
+        mensajeError = 'La contraseña actual es incorrecta';
+      } else if (error.code === 'auth/weak-password') {
+        mensajeError = 'La contraseña es muy débil';
+      } else if (error.code === 'auth/requires-recent-login') {
+        mensajeError = 'Por seguridad, debes cerrar sesión y volver a iniciar sesión para cambiar tu contraseña';
+      } else if (error.code === 'auth/network-request-failed') {
+        mensajeError = 'Error de conexión. Verifica tu internet';
+      }
+      
+      mostrarNotificacion('error', `❌ ${mensajeError}`);
     } finally {
       setCambiando(false);
     }
@@ -102,6 +146,7 @@ export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
                 onChange={(e) => setPasswordActual(e.target.value)}
                 placeholder="Ingresa tu contraseña actual"
                 disabled={cambiando}
+                autoComplete="current-password"
               />
             </div>
           </div>
@@ -115,6 +160,7 @@ export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
                 onChange={(e) => setPasswordNueva(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
                 disabled={cambiando}
+                autoComplete="new-password"
               />
             </div>
             <small className="password-hint">
@@ -131,6 +177,7 @@ export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
                 onChange={(e) => setPasswordConfirmar(e.target.value)}
                 placeholder="Repite la nueva contraseña"
                 disabled={cambiando}
+                autoComplete="new-password"
               />
             </div>
           </div>
@@ -171,6 +218,15 @@ export const CambiarPassword = ({ distribuidorId, distribuidorEmail }) => {
             <li>✅ Combina letras, números y caracteres especiales</li>
             <li>✅ No compartas tu contraseña con nadie</li>
             <li>✅ Cámbiala periódicamente</li>
+          </ul>
+        </div>
+
+        <div className="password-info-box" style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', border: '2px solid #3b82f6' }}>
+          <h4>ℹ️ Importante</h4>
+          <ul>
+            <li>🔐 Tu contraseña se almacena de forma segura en Firebase</li>
+            <li>🔄 El cambio es inmediato y afecta tu próximo inicio de sesión</li>
+            <li>📧 Tu email de acceso es: <strong>{distribuidorEmail || user?.email}</strong></li>
           </ul>
         </div>
       </div>

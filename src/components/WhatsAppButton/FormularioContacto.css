@@ -1,157 +1,24 @@
-
 /* ============================================
-   TOAST NOTIFICATIONS
+   MODAL OVERLAY
    ============================================ */
 
-.toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10001;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  pointer-events: none;
-}
-
-.toast {
-  background: white;
-  padding: 18px 22px;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  min-width: 320px;
-  max-width: 420px;
-  animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  pointer-events: auto;
-  border-left: 5px solid #25D366;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(450px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.toast.toast-exit {
-  animation: slideOutRight 0.3s ease forwards;
-}
-
-@keyframes slideOutRight {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(450px);
-    opacity: 0;
-  }
-}
-
-.toast-success {
-  border-left-color: #10b981;
-}
-
-.toast-error {
-  border-left-color: #ef4444;
-}
-
-.toast-icon {
-  font-size: 26px;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.toast-content {
-  flex: 1;
-}
-
-.toast-title {
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 6px;
-  font-size: 16px;
-}
-
-.toast-message {
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 8px;
-}
-
-.toast-code {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-family: 'Courier New', monospace;
-  font-weight: 700;
-  color: #667eea;
-  display: inline-block;
-  font-size: 18px;
-  letter-spacing: 2px;
-  border: 2px solid #e5e7eb;
-}
-
-.toast-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #9ca3af;
-  font-size: 22px;
-  transition: color 0.3s;
-  padding: 0;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.toast-close:hover {
-  color: #111827;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .toast-container {
-    left: 16px;
-    right: 16px;
-    top: 16px;
-  }
-  
-  .toast {
-    min-width: auto;
-    max-width: 100%;
-  }
-}
-
-.modal-overlay {
+.formulario-contacto .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+  backdrop-filter: blur(10px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  animation: fadeIn 0.3s ease;
+  animation: fadeInModal 0.3s ease;
   padding: 20px;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInModal {
   from {
     opacity: 0;
   }
@@ -164,24 +31,24 @@
    MODAL CONTENT
    ============================================ */
 
-.modal-content {
+.formulario-contacto .modal-content {
   background: white;
-  padding: 40px 35px;
-  border-radius: 20px;
-  max-width: 500px;
+  padding: 45px 40px;
+  border-radius: 24px;
+  max-width: 520px;
   width: 100%;
   position: relative;
-  animation: slideUp 0.4s ease;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUpModal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
 }
 
-@keyframes slideUp {
+@keyframes slideUpModal {
   from {
-    transform: translateY(50px);
+    transform: translateY(60px) scale(0.9);
     opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
@@ -190,309 +57,416 @@
    CLOSE BUTTON
    ============================================ */
 
-.modal-close {
+.formulario-contacto .modal-close {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  background: #f3f4f6;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   border: none;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
   color: #6b7280;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 300;
+  z-index: 1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal-close:hover {
-  background: #ef4444;
+.formulario-contacto .modal-close:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
-  transform: rotate(90deg);
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.formulario-contacto .modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ============================================
    MODAL HEADER
    ============================================ */
 
-.modal-content h3 {
-  margin: 0 0 8px 0;
+.formulario-contacto .modal-content h3 {
+  margin: 0 0 10px 0;
   color: #111827;
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.modal-subtitle {
-  margin: 0 0 30px 0;
+.formulario-contacto .modal-subtitle {
+  margin: 0 0 35px 0;
   color: #6b7280;
-  font-size: 15px;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-weight: 500;
 }
 
-.modal-subtitle::before {
+.formulario-contacto .modal-subtitle::before {
   content: '💬';
-  font-size: 18px;
+  font-size: 22px;
+  animation: bounceEmoji 2s ease-in-out infinite;
+}
+
+@keyframes bounceEmoji {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 /* ============================================
    FORM STYLES
    ============================================ */
 
-.form-group {
-  margin-bottom: 20px;
+.formulario-contacto .form-group {
+  margin-bottom: 22px;
+  position: relative;
 }
 
-.form-group input,
-.form-group select {
+.formulario-contacto .form-group input,
+.formulario-contacto .form-group select {
   width: 100%;
-  padding: 14px 16px;
+  padding: 16px 18px;
   border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 15px;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   color: #111827;
-  background: white;
+  background: #fafafa;
   font-family: inherit;
+  box-sizing: border-box;
+  font-weight: 500;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.formulario-contacto .form-group input:focus,
+.formulario-contacto .form-group select:focus {
   outline: none;
   border-color: #25D366;
-  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.15),
+              0 4px 12px rgba(37, 211, 102, 0.2);
   transform: translateY(-2px);
 }
 
-.form-group input::placeholder {
-  color: #9ca3af;
+.formulario-contacto .form-group input:disabled,
+.formulario-contacto .form-group select:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
-.form-group select {
+.formulario-contacto .form-group input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Select Dropdown mejorado */
+.formulario-contacto .form-group select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-color: #fafafa;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2325D366'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 20px;
-  padding-right: 40px;
+  background-position: right 14px center;
+  background-size: 22px;
+  padding-right: 45px;
 }
 
-.form-group select option {
-  padding: 10px;
+.formulario-contacto .form-group select:focus {
+  background-color: white;
+}
+
+.formulario-contacto .form-group select option {
+  padding: 12px;
+  color: #111827;
+  font-weight: 500;
+}
+
+.formulario-contacto .form-group select option:disabled {
+  color: #9ca3af;
 }
 
 /* ============================================
    SUBMIT BUTTON
    ============================================ */
 
-.btn-submit {
+.formulario-contacto .btn-submit {
   width: 100%;
-  padding: 16px;
+  padding: 18px 24px;
   background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 14px;
+  font-size: 17px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 30px;
 }
 
-.btn-submit:hover {
-  transform: translateY(-2px);
+.formulario-contacto .btn-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.formulario-contacto .btn-submit:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.formulario-contacto .btn-submit:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+}
+
+.formulario-contacto .btn-submit:active:not(:disabled) {
+  transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
 }
 
-.btn-submit:active {
-  transform: translateY(0);
-}
-
-.btn-submit:disabled {
-  opacity: 0.6;
+.formulario-contacto .btn-submit:disabled {
+  opacity: 0.7;
   cursor: not-allowed;
   transform: none;
 }
 
-.btn-submit::after {
+.formulario-contacto .btn-submit::after {
   content: '→';
-  font-size: 20px;
-  transition: transform 0.3s;
+  font-size: 22px;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  font-weight: 300;
 }
 
-.btn-submit:hover::after {
-  transform: translateX(4px);
+.formulario-contacto .btn-submit:hover:not(:disabled)::after {
+  transform: translateX(6px);
+}
+
+.formulario-contacto .btn-submit:disabled::after {
+  display: none;
 }
 
 /* ============================================
    LOADING SPINNER
    ============================================ */
 
-.spinner {
-  width: 20px;
-  height: 20px;
+.formulario-contacto .spinner {
+  width: 22px;
+  height: 22px;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spinLoader 0.8s linear infinite;
 }
 
-@keyframes spin {
+@keyframes spinLoader {
   to {
     transform: rotate(360deg);
   }
 }
 
 /* ============================================
-   TOAST NOTIFICATIONS
+   FOOTER TEXT
    ============================================ */
 
-.toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10001;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  pointer-events: none;
-}
-
-.toast {
-  background: white;
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 300px;
-  max-width: 400px;
-  animation: slideInRight 0.4s ease;
-  pointer-events: auto;
-  border-left: 4px solid #25D366;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.toast.toast-exit {
-  animation: slideOutRight 0.4s ease forwards;
-}
-
-@keyframes slideOutRight {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-}
-
-.toast-success {
-  border-left-color: #10b981;
-}
-
-.toast-error {
-  border-left-color: #ef4444;
-}
-
-.toast-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
-.toast-content {
-  flex: 1;
-}
-
-.toast-title {
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 4px;
-  font-size: 15px;
-}
-
-.toast-message {
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.toast-code {
-  background: #f3f4f6;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-family: 'Courier New', monospace;
-  font-weight: 700;
-  color: #667eea;
-  margin-top: 8px;
-  display: inline-block;
-  font-size: 16px;
-  letter-spacing: 1px;
-}
-
-.toast-close {
-  background: none;
-  border: none;
-  cursor: pointer;
+.formulario-contacto .modal-footer-text {
+  text-align: center;
+  margin-top: 20px;
   color: #9ca3af;
-  font-size: 20px;
-  transition: color 0.3s;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  font-size: 13px;
 }
 
-.toast-close:hover {
-  color: #111827;
+.formulario-contacto .modal-footer-text::before {
+  content: '🔒';
+  margin-right: 6px;
 }
 
 /* ============================================
-   RESPONSIVE
+   RESPONSIVE MOBILE
    ============================================ */
 
 @media (max-width: 768px) {
-  .modal-content {
-    padding: 30px 24px;
-    margin: 0 16px;
+  .formulario-contacto .modal-overlay {
+    padding: 16px;
+  }
+
+  .formulario-contacto .modal-content {
+    padding: 35px 28px;
+    border-radius: 20px;
   }
   
-  .modal-content h3 {
+  .formulario-contacto .modal-content h3 {
+    font-size: 28px;
+  }
+
+  .formulario-contacto .modal-subtitle {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .formulario-contacto .modal-close {
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .formulario-contacto .form-group {
+    margin-bottom: 18px;
+  }
+
+  .formulario-contacto .form-group input,
+  .formulario-contacto .form-group select {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .formulario-contacto .btn-submit {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formulario-contacto .modal-content {
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .formulario-contacto .modal-content h3 {
     font-size: 24px;
   }
-  
-  .toast-container {
-    left: 20px;
-    right: 20px;
-    top: 20px;
+
+  .formulario-contacto .modal-subtitle {
+    font-size: 14px;
   }
-  
-  .toast {
-    min-width: auto;
+
+  .formulario-contacto .form-group input,
+  .formulario-contacto .form-group select {
+    padding: 13px 14px;
+    font-size: 14px;
+    border-radius: 12px;
   }
+
+  .formulario-contacto .btn-submit {
+    font-size: 15px;
+    padding: 15px 18px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.formulario-contacto .modal-close:focus-visible,
+.formulario-contacto .form-group input:focus-visible,
+.formulario-contacto .form-group select:focus-visible,
+.formulario-contacto .btn-submit:focus-visible {
+  outline: 3px solid #25D366;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formulario-contacto .modal-overlay,
+  .formulario-contacto .modal-content,
+  .formulario-contacto .modal-close,
+  .formulario-contacto .form-group input,
+  .formulario-contacto .form-group select,
+  .formulario-contacto .btn-submit,
+  .formulario-contacto .spinner,
+  .formulario-contacto .modal-subtitle::before {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .formulario-contacto .form-group input,
+  .formulario-contacto .form-group select {
+    border-width: 3px;
+  }
+
+  .formulario-contacto .btn-submit {
+    border: 3px solid #128C7E;
+  }
+}
+
+/* ============================================
+   ANIMACIONES ADICIONALES
+   ============================================ */
+
+.formulario-contacto .form-group {
+  animation: fadeInUpForm 0.4s ease;
+  animation-fill-mode: both;
+}
+
+.formulario-contacto .form-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.formulario-contacto .form-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.formulario-contacto .form-group:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.formulario-contacto .form-group:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeInUpForm {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   HOVER EFFECTS MEJORADOS
+   ============================================ */
+
+.formulario-contacto .form-group input:hover:not(:disabled),
+.formulario-contacto .form-group select:hover:not(:disabled) {
+  border-color: #25D366;
+  background: white;
+}
+
+.formulario-contacto .btn-submit:hover:not(:disabled) {
+  letter-spacing: 0.5px;
 }

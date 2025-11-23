@@ -10,7 +10,7 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
     nombre: '',
     telefono: '',
     email: '',
-    producto: planPreseleccionado || '' // ← USAR PLAN PRESELECCIONADO
+    producto: planPreseleccionado || ''
   });
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -41,29 +41,29 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
     try {
       const codigoUnico = generarCodigoUnico();
 
-      // Guardar lead en Firebase
+      console.log('📝 Guardando lead para distribuidor UID:', distribuidor?.uid);
+
       await addDoc(collection(db, 'leads'), {
-        distribuidorId: distribuidor?.id || 'default',
+        distribuidorId: distribuidor?.uid || 'default',
         codigoUnico: codigoUnico,
         nombreCliente: formData.nombre,
         telefono: formData.telefono,
-        email: formData.email,
+        email: formData.email || '',
         productoInteres: formData.producto,
         fechaHora: new Date().toISOString(),
         estado: 'pendiente'
       });
 
-      // Actualizar contador de leads del distribuidor
-      if (distribuidor?.id && distribuidor.id !== 'default') {
-        const docRef = doc(db, 'distribuidores', distribuidor.id);
+      console.log('✅ Lead guardado con código:', codigoUnico);
+
+      if (distribuidor?.uid && distribuidor.uid !== 'default') {
+        const docRef = doc(db, 'distribuidores', distribuidor.uid);
         await updateDoc(docRef, {
           'estadisticas.leads': increment(1)
         });
+        console.log('✅ Contador de leads actualizado');
       }
 
-      console.log('✅ Lead guardado con código:', codigoUnico);
-
-      // Mostrar notificación de éxito
       mostrarToast(
         'success',
         '¡Registro exitoso! 🎉',
@@ -71,24 +71,29 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
         codigoUnico
       );
 
-      // Esperar 2.5 segundos antes de continuar
       setTimeout(() => {
         setShowToast(false);
-        onClose(); // Cerrar modal
         
-        // Esperar un poco más y abrir WhatsApp
-        setTimeout(() => {
-          onSubmit({
-            ...formData,
-            codigo: codigoUnico
-          });
-        }, 300);
+        const mensaje = `¡Hola! Soy ${formData.nombre}. Mi código es: *${codigoUnico}*. Estoy interesado en ${formData.producto}`;
+        const whatsappNumber = distribuidor?.whatsapp || '573001234567';
+        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(mensaje)}`;
+        
+        console.log('📱 Abriendo WhatsApp:', url);
+        
+        const whatsappWindow = window.open(url, '_blank');
+        
+        if (!whatsappWindow || whatsappWindow.closed || typeof whatsappWindow.closed === 'undefined') {
+          window.location.href = url;
+        }
+        
+        onClose();
+        setLoading(false);
+
       }, 2500);
 
     } catch (error) {
-      console.error('Error al guardar lead:', error);
+      console.error('❌ Error al guardar lead:', error);
       
-      // Mostrar notificación de error
       mostrarToast(
         'error',
         'Error al procesar',
@@ -99,14 +104,22 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
     }
   };
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget && !loading) {
+      onClose();
+    }
+  };
+
   return (
     <>
-      <div className="modal-overlay" onClick={!loading ? onClose : undefined}>
+      {/* Modal del Formulario - CON CLASE WRAPPER */}
+      <div className="formulario-contacto modal-overlay" onClick={handleOverlayClick}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <button 
             className="modal-close" 
             onClick={onClose}
             disabled={loading}
+            aria-label="Cerrar"
           >
             ✕
           </button>
@@ -124,6 +137,7 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
                 onChange={handleChange}
                 required
                 disabled={loading}
+                autoComplete="name"
               />
             </div>
 
@@ -136,6 +150,7 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
                 onChange={handleChange}
                 required
                 disabled={loading}
+                autoComplete="tel"
               />
             </div>
 
@@ -147,6 +162,7 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
                 value={formData.email}
                 onChange={handleChange}
                 disabled={loading}
+                autoComplete="email"
               />
             </div>
 
@@ -162,8 +178,6 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
                 <option value="Plan Esencial 🎬">Plan Esencial 🎬</option>
                 <option value="Plan Conectado 📱">Plan Conectado 📱</option>
                 <option value="Plan Total 🌟">Plan Total 🌟</option>
-                <option value="Cuentas Completas 📦">Cuentas Completas 📦</option>
-                <option value="Otro">Otro</option>
               </select>
             </div>
 
@@ -182,21 +196,23 @@ export const FormularioContacto = ({ distribuidor, onClose, onSubmit, planPresel
               )}
             </button>
           </form>
+
+          <p className="modal-footer-text">
+            Tus datos están seguros con nosotros
+          </p>
         </div>
       </div>
 
       {/* Toast Notification */}
       {showToast && (
-        <div className="toast-container">
-          <Toast
-            type={toastData.type}
-            title={toastData.title}
-            message={toastData.message}
-            code={toastData.code}
-            onClose={() => setShowToast(false)}
-            duration={null}
-          />
-        </div>
+        <Toast
+          type={toastData.type}
+          title={toastData.title}
+          message={toastData.message}
+          code={toastData.code}
+          onClose={() => setShowToast(false)}
+          duration={null}
+        />
       )}
     </>
   );

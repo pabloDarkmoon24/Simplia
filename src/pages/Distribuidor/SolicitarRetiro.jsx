@@ -1,7 +1,7 @@
 // src/pages/Distribuidor/SolicitarRetiro.jsx
 import { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, addDoc } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { collection, getDocs, query, where, addDoc, doc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../../firebase/config';
 
 export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
   const [leadsPendientes, setLeadsPendientes] = useState([]);
@@ -26,19 +26,34 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
 
   const cargarLeadsPendientes = async () => {
     try {
-      const leadsRef = collection(db, 'leads');
-      const q = query(
-        leadsRef,
-        where('distribuidorId', '==', distribuidor.id),
-        where('estado', '==', 'compra_ejecutada')
-      );
+      const user = auth.currentUser;
       
-      const snapshot = await getDocs(q);
+      if (!user) {
+        console.error('❌ No hay usuario autenticado');
+        setLoading(false);
+        return;
+      }
+
+      const distribuidorUID = user.uid;
+      console.log('🔍 Cargando leads pendientes para UID:', distribuidorUID);
+
+      // Cargar TODOS los leads y filtrar en cliente
+      const leadsRef = collection(db, 'leads');
+      const snapshot = await getDocs(leadsRef);
+      
       const leadsData = [];
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.comision?.monto > 0 && !data.comision?.pagada) {
+        
+        // Filtrar por distribuidorId, estado, comisión pendiente Y que NO esté en proceso de retiro
+        if (
+          data.distribuidorId === distribuidorUID &&
+          data.estado === 'compra_ejecutada' &&
+          data.comision?.monto > 0 &&
+          !data.comision?.pagada &&
+          !data.comision?.enProcesoRetiro  // ← NUEVO: Verificar que NO esté en proceso
+        ) {
           leadsData.push({
             id: doc.id,
             ...data
@@ -47,9 +62,11 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
       });
 
       leadsData.sort((a, b) => new Date(a.fechaCompra) - new Date(b.fechaCompra));
+      
+      console.log('✅ Leads pendientes cargados:', leadsData.length);
       setLeadsPendientes(leadsData);
     } catch (error) {
-      console.error('Error al cargar leads:', error);
+      console.error('❌ Error al cargar leads:', error);
     } finally {
       setLoading(false);
     }
@@ -77,59 +94,131 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
       .reduce((total, lead) => total + (lead.comision?.monto || 0), 0);
   };
 
-  const solicitarRetiro = async () => {
-    if (leadsSeleccionados.length === 0) {
-      mostrarNotificacion('error', 'Selecciona al menos una comisión');
-      return;
-    }
+ const solicitarRetiro = async () => {
+  if (leadsSeleccionados.length === 0) {
+    mostrarNotificacion('error', 'Selecciona al menos una comisión');
+    return;
+  }
 
-    if (!distribuidor.datosPago?.banco || !distribuidor.datosPago?.numeroCuenta) {
-      mostrarNotificacion('error', 'Configura tus datos de pago primero');
-      return;
-    }
+  if (!distribuidor.datosPago?.banco || !distribuidor.datosPago?.numeroCuenta) {
+    mostrarNotificacion('error', 'Configura tus datos de pago primero');
+    return;
+  }
 
-    setProcesando(true);
+  const user = auth.currentUser;
+  
+  if (!user) {
+    mostrarNotificacion('error', 'Sesión no válida');
+    return;
+  }
 
-    try {
-      const montoTotal = calcularTotalSeleccionado();
-      const leadsIncluidos = leadsPendientes
-        .filter(lead => leadsSeleccionados.includes(lead.id))
-        .map(lead => ({
-          leadId: lead.id,
-          codigoUnico: lead.codigoUnico,
-          nombreCliente: lead.nombreCliente,
-          producto: lead.productoInteres,
-          comision: lead.comision.monto,
-          fechaVenta: lead.fechaCompra
-        }));
+  const distribuidorUID = user.uid;
 
-      // Crear solicitud de retiro
-      await addDoc(collection(db, 'solicitudesRetiro'), {
-        distribuidorId: distribuidor.id,
-        distribuidorNombre: distribuidor.nombre,
-        distribuidorEmail: distribuidor.email,
-        monto: montoTotal,
-        leadsIncluidos: leadsIncluidos,
-        datosPago: distribuidor.datosPago,
-        estado: 'pendiente',
-        fechaSolicitud: new Date().toISOString()
+  setProcesando(true);
+
+  try {
+    // 🔒 PASO 1: MARCAR LEADS COMO "EN PROCESO" INMEDIATAMENTE
+    console.log('🔒 Marcando leads como en proceso ANTES de crear solicitud...');
+    
+    const updatePromises = leadsSeleccionados.map(async (leadId) => {
+      const leadRef = doc(db, 'leads', leadId);
+      return updateDoc(leadRef, {
+        'comision.enProcesoRetiro': true,
+        'comision.fechaSolicitudRetiro': new Date().toISOString()
       });
+    });
 
-      mostrarNotificacion('success', '✅ Solicitud enviada correctamente. El administrador procesará tu pago pronto.');
-      
-      setLeadsSeleccionados([]);
-      
-      setTimeout(() => {
-        if (onRetiroSolicitado) onRetiroSolicitado();
-      }, 2000);
+    await Promise.all(updatePromises);
+    console.log('✅ Leads marcados como en proceso');
 
-    } catch (error) {
-      console.error('Error al solicitar retiro:', error);
-      mostrarNotificacion('error', '❌ Error al enviar solicitud');
-    } finally {
-      setProcesando(false);
+    // Ocultar leads inmediatamente de la UI
+    setLeadsPendientes(prevLeads => 
+      prevLeads.filter(lead => !leadsSeleccionados.includes(lead.id))
+    );
+    
+    // 📝 PASO 2: CREAR SOLICITUD DE RETIRO
+    const montoTotal = calcularTotalSeleccionado();
+    const leadsIncluidos = leadsPendientes
+      .filter(lead => leadsSeleccionados.includes(lead.id))
+      .map(lead => ({
+        leadId: lead.id,
+        codigoUnico: lead.codigoUnico,
+        nombreCliente: lead.nombreCliente,
+        producto: lead.productoInteres,
+        comision: lead.comision.monto,
+        fechaVenta: lead.fechaCompra
+      }));
+
+    console.log('💳 Creando solicitud de retiro:', {
+      distribuidorUID,
+      monto: montoTotal,
+      leads: leadsIncluidos.length
+    });
+
+    const solicitudRef = await addDoc(collection(db, 'solicitudesRetiro'), {
+      distribuidorId: distribuidorUID,
+      distribuidorNombre: distribuidor.nombre || 'Distribuidor',
+      distribuidorEmail: distribuidor.email || user.email,
+      monto: montoTotal,
+      leadsIncluidos: leadsIncluidos,
+      datosPago: distribuidor.datosPago,
+      estado: 'pendiente',
+      fechaSolicitud: new Date().toISOString()
+    });
+
+    console.log('✅ Solicitud de retiro creada:', solicitudRef.id);
+
+    // 🔗 PASO 3: AGREGAR ID DE SOLICITUD A LOS LEADS
+    const updateWithIdPromises = leadsSeleccionados.map(async (leadId) => {
+      const leadRef = doc(db, 'leads', leadId);
+      return updateDoc(leadRef, {
+        'comision.solicitudRetiroId': solicitudRef.id
+      });
+    });
+
+    await Promise.all(updateWithIdPromises);
+    console.log('✅ IDs de solicitud agregados a los leads');
+
+    mostrarNotificacion('success', '✅ Solicitud enviada correctamente. El administrador procesará tu pago pronto.');
+    
+    // Limpiar selección
+    setLeadsSeleccionados([]);
+    
+    setTimeout(() => {
+      if (onRetiroSolicitado) onRetiroSolicitado();
+    }, 2000);
+
+  } catch (error) {
+    console.error('❌ Error al solicitar retiro:', error);
+    
+    // ⚠️ SI FALLA, REVERTIR EL MARCADO
+    console.log('⚠️ Revirtiendo marcado de leads...');
+    
+    try {
+      const revertPromises = leadsSeleccionados.map(async (leadId) => {
+        const leadRef = doc(db, 'leads', leadId);
+        return updateDoc(leadRef, {
+          'comision.enProcesoRetiro': false,
+          'comision.solicitudRetiroId': null,
+          'comision.fechaSolicitudRetiro': null
+        });
+      });
+      
+      await Promise.all(revertPromises);
+      console.log('✅ Leads revertidos');
+      
+      // Recargar leads
+      cargarLeadsPendientes();
+      
+    } catch (revertError) {
+      console.error('❌ Error al revertir leads:', revertError);
     }
-  };
+    
+    mostrarNotificacion('error', '❌ Error al enviar solicitud');
+  } finally {
+    setProcesando(false);
+  }
+};
 
   const formatearMoneda = (valor) => {
     return new Intl.NumberFormat('es-CO', {
@@ -158,13 +247,13 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
   }
 
   const montoSeleccionado = calcularTotalSeleccionado();
-  const saldoDisponible = distribuidor.comisiones?.saldoDisponible || 0;
+  const saldoDisponible = distribuidor?.comisiones?.saldoDisponible || 0;
 
   return (
     <div className="solicitar-retiro-container">
       <h2>💳 Solicitar Retiro</h2>
 
-      {!distribuidor.datosPago?.banco && (
+      {!distribuidor?.datosPago?.banco && (
         <div className="alerta-configurar">
           ⚠️ <strong>Debes configurar tus datos de pago antes de solicitar un retiro</strong>
           <p>Ve a la sección "Datos de Pago" para completar tu información bancaria.</p>
@@ -176,7 +265,7 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
           <span className="label">Saldo Disponible:</span>
           <span className="monto">{formatearMoneda(saldoDisponible)}</span>
         </div>
-        {distribuidor.datosPago?.banco && (
+        {distribuidor?.datosPago?.banco && (
           <div className="datos-pago-resumen">
             <strong>Datos de pago configurados:</strong>
             <p>{distribuidor.datosPago.banco} - {distribuidor.datosPago.numeroCuenta}</p>
@@ -188,7 +277,7 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
         <div className="empty-state">
           <div className="empty-icon">💰</div>
           <p>No tienes comisiones pendientes para retirar</p>
-          <p>Las comisiones aparecerán aquí cuando tus leads sean marcados como "Compra Ejecutada"</p>
+          <p>Las comisiones aparecerán aquí cuando tus leads sean marcados como "Compra Ejecutada" y no estén en proceso de retiro.</p>
         </div>
       ) : (
         <>
@@ -254,7 +343,7 @@ export const SolicitarRetiro = ({ distribuidor, onRetiroSolicitado }) => {
             </table>
           </div>
 
-          {leadsSeleccionados.length > 0 && distribuidor.datosPago?.banco && (
+          {leadsSeleccionados.length > 0 && distribuidor?.datosPago?.banco && (
             <div className="retiro-footer">
               <button 
                 onClick={solicitarRetiro}

@@ -1,15 +1,15 @@
 // src/pages/Distribuidor/DistribuidorDashboard.jsx
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/config';
 import { MisLeads } from './MisLeads';
 import { MisComisiones } from './MisComisiones';
 import { SolicitarRetiro } from './SolicitarRetiro';
-import { ConfigurarDatosPago } from './ConfigurarDatosPago';
 import { CambiarPassword } from './CambiarPassword';
 import '../../styles/distribuidor.css';
+import { ConfigurarDatosPago } from './ConfigurarDatosPago';
 
 // Popup simple reutilizable
 const Popup = ({ message, onClose }) => (
@@ -36,36 +36,49 @@ export const DistribuidorDashboard = () => {
   const [popupMessage, setPopupMessage] = useState(null);
   const navigate = useNavigate();
 
+  // ⭐ ESCUCHAR CAMBIOS EN EL ESTADO DE AUTENTICACIÓN
   useEffect(() => {
-    cargarDatos();
-  }, []);
-
-  const cargarDatos = async () => {
-    const user = auth.currentUser;
+    console.log('👂 Escuchando estado de autenticación...');
     
-    if (!user) {
-      console.log('❌ No hay usuario autenticado');
-      navigate('/distribuidor/login');
-      return;
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log('✅ Usuario autenticado encontrado:', user.uid);
+        console.log('📧 Email:', user.email);
+        
+        // Cargar datos del distribuidor
+        await cargarDatos(user.uid);
+      } else {
+        console.log('❌ No hay usuario autenticado. Redirigiendo al login...');
+        setLoading(false);
+        navigate('/distribuidor/login');
+      }
+    });
 
+    // Cleanup: desuscribirse al desmontar el componente
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const cargarDatos = async (uid) => {
     try {
-      console.log('📊 Cargando datos del distribuidor:', user.uid);
+      console.log('📊 Cargando datos del distribuidor UID:', uid);
 
-      const distribuidorRef = doc(db, 'distribuidores', user.uid);
+      const distribuidorRef = doc(db, 'distribuidores', uid);
       const distribuidorSnap = await getDoc(distribuidorRef);
 
       if (!distribuidorSnap.exists()) {
-        console.error('❌ Distribuidor no encontrado');
+        console.error('❌ Distribuidor no encontrado en Firestore');
         await signOut(auth);
         navigate('/distribuidor/login');
         return;
       }
 
       const distribuidorData = {
-        id: distribuidorSnap.id,
+        uid: uid,
+        id: distribuidorSnap.data().id,
         ...distribuidorSnap.data()
       };
+
+      console.log('✅ Datos del distribuidor:', distribuidorData);
 
       if (!distribuidorData.activo) {
         console.error('❌ Distribuidor inactivo');
@@ -94,12 +107,21 @@ export const DistribuidorDashboard = () => {
     }
   };
 
+  const recargarDatos = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      await cargarDatos(user.uid);
+    }
+  };
+
   const handleLogout = async () => {
     try {
+      console.log('👋 Cerrando sesión...');
       await signOut(auth);
+      console.log('✅ Sesión cerrada');
       navigate('/distribuidor/login');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('❌ Error al cerrar sesión:', error);
     }
   };
 
@@ -113,19 +135,25 @@ export const DistribuidorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <p>Cargando panel...</p>
+      <div className="distribuidor-dashboard">
+        <div className="loading-container">
+          <div className="spinner-large"></div>
+          <p>Cargando panel...</p>
+        </div>
       </div>
     );
   }
 
   if (!distribuidor) {
     return (
-      <div className="error-container">
-        <h2>Error al cargar datos</h2>
-        <button onClick={() => navigate('/distribuidor/login')}>
-          Volver al login
-        </button>
+      <div className="distribuidor-dashboard">
+        <div className="error-container">
+          <h2>❌ Error al cargar datos</h2>
+          <p>No se pudieron cargar tus datos. Intenta iniciar sesión de nuevo.</p>
+          <button onClick={() => navigate('/distribuidor/login')} className="btn-primary">
+            Volver al login
+          </button>
+        </div>
       </div>
     );
   }
@@ -142,7 +170,7 @@ export const DistribuidorDashboard = () => {
           <p className="distribuidor-nombre">Hola, <strong>{distribuidor?.nombre}</strong></p>
         </div>
         <button onClick={handleLogout} className="btn-logout">
-          Cerrar Sesión
+          🚪 Cerrar Sesión
         </button>
       </header>
 
@@ -248,13 +276,16 @@ export const DistribuidorDashboard = () => {
                   <button 
                     onClick={() => {
                       navigator.clipboard.writeText(`https://simpliacol.com/${distribuidor?.id}`);
-                      setPopupMessage('Enlace copiado al portapapeles ✅');
+                      setPopupMessage('✅ Enlace copiado al portapapeles');
                     }}
                     className="btn-copiar-enlace"
                   >
                     📋 Copiar
                   </button>
                 </div>
+                <p className="enlace-hint">
+                  Comparte este enlace con tus clientes para rastrear tus ventas
+                </p>
               </div>
 
               <div className="resumen-card">
@@ -290,7 +321,7 @@ export const DistribuidorDashboard = () => {
               </div>
             </div>
 
-            {!distribuidor?.datosPago?.banco && (
+            {!distribuidor?.datosPago?.configurado && (
               <div className="alerta-datos-pago">
                 ⚠️ <strong>Importante:</strong> Configura tus datos de pago para poder recibir tus comisiones.
                 <button onClick={() => setVista('datos')} className="btn-configurar-ahora">
@@ -302,30 +333,31 @@ export const DistribuidorDashboard = () => {
         )}
 
         {vista === 'leads' && (
-          <MisLeads distribuidorId={distribuidor?.id} />
+          <MisLeads distribuidorId={distribuidor?.uid} />
         )}
 
         {vista === 'comisiones' && (
-          <MisComisiones distribuidorId={distribuidor?.id} />
+          <MisComisiones distribuidorId={distribuidor?.uid} />
         )}
 
         {vista === 'retiro' && (
           <SolicitarRetiro 
             distribuidor={distribuidor} 
-            onRetiroSolicitado={cargarDatos}
+            onRetiroSolicitado={recargarDatos}
           />
         )}
 
         {vista === 'datos' && (
           <ConfigurarDatosPago 
-            distribuidor={distribuidor}
-            onDatosActualizados={cargarDatos}
+            distribuidorData={distribuidor}
+            onActualizar={recargarDatos}
+            onCambiarSeccion={setVista}
           />
         )}
 
         {vista === 'password' && (
           <CambiarPassword 
-            distribuidorId={distribuidor?.id}
+            distribuidorId={distribuidor?.uid}
             distribuidorEmail={distribuidor?.email}
           />
         )}

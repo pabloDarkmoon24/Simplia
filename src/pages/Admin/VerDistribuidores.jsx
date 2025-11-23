@@ -1,7 +1,7 @@
 // src/pages/Admin/VerDistribuidores.jsx
 import { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc, deleteDoc, getDoc, increment, query, where } from 'firebase/firestore';
-import { db } from '../../firebase/config';
+import { auth, db } from '../../firebase/config';
 
 export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
   const [distribuidores, setDistribuidores] = useState([]);
@@ -50,33 +50,30 @@ export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
     }
   };
 
-  const cargarLeadsSinAtender = async () => {
-    try {
-      const leadsRef = collection(db, 'leads');
-      const q = query(
-        leadsRef,
-        where('estado', 'in', ['pendiente', 'contactado'])
-      );
+const cargarLeadsSinAtender = async () => {
+  try {
+    // NO usar query, cargar TODO y filtrar en cliente
+    const leadsRef = collection(db, 'leads');
+    const snapshot = await getDocs(leadsRef);
+    const conteo = {};
+    
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const distribuidorId = data.distribuidorId;
+      const estado = data.estado;
       
-      const snapshot = await getDocs(q);
-      const conteo = {};
-      
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const distribuidorId = data.distribuidorId;
-        
-        if (distribuidorId) {
-          conteo[distribuidorId] = (conteo[distribuidorId] || 0) + 1;
-        }
-      });
-      
-      setLeadsPorDistribuidor(conteo);
-      console.log('🔔 Leads sin atender por distribuidor:', conteo);
-    } catch (error) {
-      console.error('Error al cargar leads sin atender:', error);
-    }
-  };
-
+      // Filtrar en el cliente
+      if (distribuidorId && (estado === 'pendiente' || estado === 'contactado')) {
+        conteo[distribuidorId] = (conteo[distribuidorId] || 0) + 1;
+      }
+    });
+    
+    setLeadsPorDistribuidor(conteo);
+    console.log('🔔 Leads sin atender por distribuidor:', conteo);
+  } catch (error) {
+    console.error('❌ Error al cargar leads sin atender:', error);
+  }
+};
   const cargarDistribuidores = async () => {
     try {
       const distribuidoresRef = collection(db, 'distribuidores');
@@ -87,8 +84,8 @@ export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
         const data = docSnap.data();
         distribuidoresData.push({
           ...data,
-          uid: docSnap.id, // UID del documento (para eliminar y actualizar)
-          docId: docSnap.id // Alias para compatibilidad
+          uid: docSnap.id,
+          docId: docSnap.id
         });
       });
 
@@ -108,33 +105,37 @@ export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
     }
   };
 
-  const cargarLeadsDistribuidor = async (distribuidorUID) => {
-    try {
-      const leadsRef = collection(db, 'leads');
-      const snapshot = await getDocs(leadsRef);
+const cargarLeadsDistribuidor = async (distribuidorUID) => {
+  try {
+    console.log('📝 Cargando leads del distribuidor UID:', distribuidorUID);
 
-      const leadsData = [];
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        // Comparar con el UID del distribuidor
-        if (data.distribuidorId === distribuidorUID) {
-          leadsData.push({
-            id: docSnap.id,
-            ...data
-          });
-        }
-      });
+    // IMPORTANTE: NO usar query con where()
+    // Cargar TODOS los leads y filtrar en el cliente
+    const leadsRef = collection(db, 'leads');
+    const snapshot = await getDocs(leadsRef);
 
-      leadsData.sort((a, b) => new Date(b.fechaHora) - new Date(a.fechaHora));
+    const leadsData = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      // Filtrar en el cliente
+      if (data.distribuidorId === distribuidorUID) {
+        leadsData.push({
+          id: docSnap.id,
+          ...data
+        });
+      }
+    });
 
-      setLeads(leadsData);
-      setMostrarLeads(true);
-      console.log('📝 Leads cargados:', leadsData);
-    } catch (error) {
-      console.error('❌ Error al cargar leads:', error);
-      mostrarNotificacion('error', 'Error al cargar leads');
-    }
-  };
+    leadsData.sort((a, b) => new Date(b.fechaHora) - new Date(a.fechaHora));
+
+    setLeads(leadsData);
+    setMostrarLeads(true);
+    console.log('✅ Leads cargados:', leadsData.length);
+  } catch (error) {
+    console.error('❌ Error al cargar leads:', error);
+    mostrarNotificacion('error', 'Error al cargar leads: ' + error.message);
+  }
+};
 
   const copiarURL = (id) => {
     const url = `https://simpliacol.com/${id}`;
@@ -169,15 +170,12 @@ export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
     if (!distribuidorAEliminar) return;
 
     try {
-      // Eliminar usando el UID del documento
       await deleteDoc(doc(db, 'distribuidores', distribuidorAEliminar.uid));
       
-      // Actualizar lista local
       setDistribuidores(distribuidores.filter(d => d.uid !== distribuidorAEliminar.uid));
       
       mostrarNotificacion('success', '✅ Distribuidor eliminado exitosamente');
       
-      // Recargar para asegurar sincronización
       setTimeout(() => {
         cargarDistribuidores();
       }, 1000);
@@ -198,7 +196,6 @@ export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
 
   const verDetalle = (distribuidor) => {
     setDistribuidorSeleccionado(distribuidor);
-    // Usar el UID para cargar los leads
     cargarLeadsDistribuidor(distribuidor.uid);
   };
 
@@ -225,61 +222,104 @@ export const VerDistribuidores = ({ onUpdate, leadsSinAtender }) => {
     setShowPasswordModal(true);
   };
 
-  const cambiarPasswordDistribuidor = async () => {
-    if (!nuevaPassword || nuevaPassword.trim().length < 6) {
-      mostrarNotificacion('error', 'La contraseña debe tener al menos 6 caracteres');
-      return;
+const cambiarPasswordDistribuidor = async () => {
+  if (!nuevaPassword || nuevaPassword.trim().length < 6) {
+    mostrarNotificacion('error', 'La contraseña debe tener al menos 6 caracteres');
+    return;
+  }
+
+  setCambiandoPassword(true);
+
+  try {
+    console.log('🔑 Cambiando contraseña del distribuidor:', distribuidorPassword.email);
+
+    const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error('API Key de Firebase no configurada');
     }
 
-    setCambiandoPassword(true);
-
-    try {
-      // IMPORTANTE: Cambiar contraseña en Firebase Auth usando API REST
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${import.meta.env.VITE_FIREBASE_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            localId: distribuidorPassword.uid,
-            password: nuevaPassword.trim(),
-            returnSecureToken: false
-          })
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.error.message);
+    // Usar el endpoint correcto de Firebase Auth
+    const response = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          localId: distribuidorPassword.uid,
+          password: nuevaPassword.trim(),
+          returnSecureToken: false
+        })
       }
+    );
 
-      // Actualizar campo en Firestore (opcional, para referencia)
-      const distribuidorRef = doc(db, 'distribuidores', distribuidorPassword.uid);
-      await updateDoc(distribuidorRef, {
-        ultimoCambioPassword: new Date().toISOString(),
-        passwordCambiadaPorAdmin: true
-      });
+    const data = await response.json();
 
-      mostrarNotificacion('success', `✅ Contraseña de ${distribuidorPassword.nombre} actualizada`);
-      
-      const credenciales = `Email: ${distribuidorPassword.email}\nContraseña: ${nuevaPassword}`;
-      navigator.clipboard.writeText(credenciales);
+    if (!response.ok || data.error) {
+      console.error('❌ Error de Firebase Auth:', data.error || data);
+      throw new Error(data.error?.message || 'Error al cambiar contraseña');
+    }
+
+    console.log('✅ Contraseña actualizada en Firebase Auth');
+
+    // Actualizar metadatos en Firestore
+    const distribuidorRef = doc(db, 'distribuidores', distribuidorPassword.uid);
+    await updateDoc(distribuidorRef, {
+      ultimoCambioPassword: new Date().toISOString(),
+      passwordCambiadaPorAdmin: true,
+      adminQueCambio: auth.currentUser?.email || 'admin'
+    });
+
+    console.log('✅ Metadatos actualizados en Firestore');
+
+    // Copiar credenciales al portapapeles
+    const credenciales = `🔐 Credenciales de acceso - Simplia
+
+📧 Email: ${distribuidorPassword.email}
+🔑 Contraseña: ${nuevaPassword.trim()}
+
+🌐 Portal: https://simpliacol.com/distribuidor/login
+
+⚠️ Importante: Cambia tu contraseña después del primer inicio de sesión.`;
+    
+    await navigator.clipboard.writeText(credenciales);
+    
+    mostrarNotificacion('success', `✅ Contraseña de ${distribuidorPassword.nombre} actualizada correctamente`);
+    
+    setTimeout(() => {
       mostrarNotificacion('success', '📋 Credenciales copiadas al portapapeles');
+    }, 1000);
 
+    setTimeout(() => {
       setShowPasswordModal(false);
       setDistribuidorPassword(null);
       setNuevaPassword('');
-      
-      await cargarDistribuidores();
+    }, 2000);
+    
+    await cargarDistribuidores();
 
-    } catch (error) {
-      console.error('Error al cambiar contraseña:', error);
-      mostrarNotificacion('error', '❌ Error al cambiar la contraseña');
-    } finally {
-      setCambiandoPassword(false);
+  } catch (error) {
+    console.error('❌ Error al cambiar contraseña:', error);
+    
+    let mensajeError = 'Error al cambiar la contraseña';
+    
+    if (error.message.includes('USER_NOT_FOUND')) {
+      mensajeError = 'Usuario no encontrado en Firebase Auth';
+    } else if (error.message.includes('WEAK_PASSWORD')) {
+      mensajeError = 'La contraseña es muy débil (mínimo 6 caracteres)';
+    } else if (error.message.includes('INVALID_ID_TOKEN')) {
+      mensajeError = 'Token inválido. Recarga la página';
+    } else if (error.message.includes('API Key')) {
+      mensajeError = 'Error de configuración. Verifica las variables de entorno';
     }
-  };
+    
+    mostrarNotificacion('error', `❌ ${mensajeError}`);
+  } finally {
+    setCambiandoPassword(false);
+  }
+};
 
   const actualizarEstadoLead = async (leadId, nuevoEstado, leadData) => {
     try {

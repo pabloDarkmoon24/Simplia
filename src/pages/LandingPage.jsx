@@ -75,42 +75,45 @@ export const LandingPage = () => {
     }
   };
 
-  const registrarClick = async () => {
-    if (clickRegistrado || !distribuidorId) return;
+const registrarClick = async () => {
+  if (clickRegistrado || !distribuidorId) return;
 
-    try {
-      // Buscar el UID del distribuidor
-      const distribuidoresRef = collection(db, 'distribuidores');
-      const q = query(distribuidoresRef, where('id', '==', distribuidorId));
-      const snapshot = await getDocs(q);
+  try {
+    // Buscar el UID del distribuidor
+    const distribuidoresRef = collection(db, 'distribuidores');
+    const q = query(distribuidoresRef, where('id', '==', distribuidorId));
+    const snapshot = await getDocs(q);
 
-      if (snapshot.empty) return;
-
-      const distribuidorDoc = snapshot.docs[0];
-      const distribuidorUID = distribuidorDoc.id;
-
-      // Registrar click en colección clicks
-      const clickRef = doc(collection(db, 'clicks'));
-      await setDoc(clickRef, {
-        distribuidorId: distribuidorUID,
-        timestamp: new Date(),
-        userAgent: navigator.userAgent,
-        fecha: new Date().toISOString()
-      });
-
-      // Incrementar contador de clicks del distribuidor
-      const distribuidorRef = doc(db, 'distribuidores', distribuidorUID);
-      await updateDoc(distribuidorRef, {
-        'estadisticas.clicks': increment(1)
-      });
-
-      console.log('✅ Click registrado para distribuidor:', distribuidorUID);
-      setClickRegistrado(true);
-
-    } catch (error) {
-      console.error('Error al registrar click:', error);
+    if (snapshot.empty) {
+      console.log('⚠️ Distribuidor no encontrado, no se registra click');
+      return;
     }
-  };
+
+    const distribuidorDoc = snapshot.docs[0];
+    const distribuidorUID = distribuidorDoc.id;
+
+    // SOLO registrar click en colección clicks
+    // El contador se actualizará desde el backend o admin
+    const clickRef = doc(collection(db, 'clicks'));
+    await setDoc(clickRef, {
+      distribuidorId: distribuidorUID,
+      timestamp: new Date(),
+      userAgent: navigator.userAgent,
+      fecha: new Date().toISOString(),
+      contado: false // Flag para saber si ya se contó
+    });
+
+    console.log('✅ Click registrado para distribuidor:', distribuidorUID);
+    setClickRegistrado(true);
+
+    // NO incrementar aquí porque requiere autenticación
+    // El admin puede ver los clicks y los cuenta
+
+  } catch (error) {
+    console.error('❌ Error al registrar click:', error);
+    // NO mostrar error al usuario, es solo tracking
+  }
+};
 
   // Mostrar loading
   if (loading) {

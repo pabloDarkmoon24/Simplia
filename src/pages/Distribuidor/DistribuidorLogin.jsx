@@ -1,73 +1,82 @@
 // src/pages/Distribuidor/DistribuidorLogin.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { auth, db } from '../../firebase/config';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import '../../styles/distribuidor.css';
 
 export const DistribuidorLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      console.log('🔐 Intentando login con:', email);
+      console.log('🔐 Configurando persistencia de sesión...');
+      
+      // ⭐ CONFIGURAR PERSISTENCIA ANTES DE LOGIN
+      await setPersistence(auth, browserLocalPersistence);
+      console.log('✅ Persistencia configurada: LOCAL');
 
-      // 1. Autenticar con Firebase Auth
+      console.log('🔑 Intentando login con:', email);
+
+      // Iniciar sesión
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const uid = userCredential.user.uid;
+      const user = userCredential.user;
 
-      console.log('✅ Usuario autenticado con UID:', uid);
+      console.log('✅ Usuario autenticado:', user.uid);
 
-      // 2. Verificar que existe en distribuidores
-      const distribuidorRef = doc(db, 'distribuidores', uid);
-      const distribuidorSnap = await getDoc(distribuidorRef);
+      // Verificar que el usuario sea un distribuidor
+      const distribuidoresRef = collection(db, 'distribuidores');
+      const q = query(distribuidoresRef, where('email', '==', email));
+      const snapshot = await getDocs(q);
 
-      if (!distribuidorSnap.exists()) {
-        console.error('❌ No existe en distribuidores');
-        setError('No tienes permisos de distribuidor');
+      if (snapshot.empty) {
+        console.error('❌ Email no está registrado como distribuidor');
+        setError('Este email no está registrado como distribuidor');
         await auth.signOut();
         setLoading(false);
         return;
       }
 
-      const distribuidorData = distribuidorSnap.data();
-      console.log('✅ Distribuidor encontrado:', distribuidorData);
+      const distribuidorData = snapshot.docs[0].data();
 
-      // 3. Verificar que está activo
       if (!distribuidorData.activo) {
-        console.error('❌ Distribuidor inactivo');
-        setError('Tu cuenta está inactiva. Contacta al administrador.');
+        console.error('❌ Cuenta desactivada');
+        setError('Tu cuenta está desactivada. Contacta al administrador.');
         await auth.signOut();
         setLoading(false);
         return;
       }
 
-      console.log('✅ Login exitoso, redirigiendo...');
-
-      // 4. Redirigir al dashboard
+      console.log('✅ Distribuidor verificado. Redirigiendo...');
+      
+      // ✅ Sesión persistirá automáticamente
       navigate('/distribuidor/dashboard');
 
     } catch (error) {
       console.error('❌ Error en login:', error);
       
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        setError('Email o contraseña incorrectos');
+      let errorMessage = 'Error al iniciar sesión';
+      
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errorMessage = 'Email o contraseña incorrectos';
       } else if (error.code === 'auth/invalid-email') {
-        setError('Email inválido');
+        errorMessage = 'Email inválido';
       } else if (error.code === 'auth/too-many-requests') {
-        setError('Demasiados intentos. Intenta más tarde.');
-      } else {
-        setError('Error al iniciar sesión. Intenta de nuevo.');
+        errorMessage = 'Demasiados intentos. Intenta más tarde';
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = 'Error de conexión. Verifica tu internet';
       }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -77,17 +86,17 @@ export const DistribuidorLogin = () => {
     <div className="distribuidor-login-container">
       <div className="login-box">
         <div className="login-logo">
-          <h1>🎯 Simplia</h1>
-          <p className="login-subtitle">Panel de Distribuidor</p>
+          <h1>🚀 Simplia</h1>
+          <p className="login-subtitle">Portal Distribuidores</p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="error-message">
-              ⚠️ {error}
-            </div>
-          )}
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
 
+        <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Email</label>
             <input
@@ -97,6 +106,7 @@ export const DistribuidorLogin = () => {
               placeholder="tu@email.com"
               required
               disabled={loading}
+              autoComplete="email"
             />
           </div>
 
@@ -109,20 +119,18 @@ export const DistribuidorLogin = () => {
               placeholder="••••••••"
               required
               disabled={loading}
+              autoComplete="current-password"
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="btn-login"
-            disabled={loading}
-          >
+          <button type="submit" className="btn-login" disabled={loading}>
             {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
 
         <div className="login-footer">
-          <p>¿Problemas para acceder? Contacta al administrador</p>
+          <p>¿No tienes cuenta?</p>
+          <a href="mailto:admin@simpliacol.com">Contacta al administrador</a>
         </div>
       </div>
     </div>
