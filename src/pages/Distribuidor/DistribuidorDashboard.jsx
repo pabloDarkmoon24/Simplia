@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../firebase/config';
 import { MisLeads } from './MisLeads';
 import { MisComisiones } from './MisComisiones';
@@ -10,6 +10,7 @@ import { SolicitarRetiro } from './SolicitarRetiro';
 import { CambiarPassword } from './CambiarPassword';
 import '../../styles/distribuidor.css';
 import { ConfigurarDatosPago } from './ConfigurarDatosPago';
+
 
 // Popup simple reutilizable
 const Popup = ({ message, onClose }) => (
@@ -59,53 +60,63 @@ export const DistribuidorDashboard = () => {
   }, [navigate]);
 
   const cargarDatos = async (uid) => {
-    try {
-      console.log('📊 Cargando datos del distribuidor UID:', uid);
+  try {
+    console.log('📊 Cargando datos del distribuidor UID:', uid);
 
-      const distribuidorRef = doc(db, 'distribuidores', uid);
-      const distribuidorSnap = await getDoc(distribuidorRef);
+    const distribuidorRef = doc(db, 'distribuidores', uid);
+    const distribuidorSnap = await getDoc(distribuidorRef);
 
-      if (!distribuidorSnap.exists()) {
-        console.error('❌ Distribuidor no encontrado en Firestore');
-        await signOut(auth);
-        navigate('/distribuidor/login');
-        return;
-      }
-
-      const distribuidorData = {
-        uid: uid,
-        id: distribuidorSnap.data().id,
-        ...distribuidorSnap.data()
-      };
-
-      console.log('✅ Datos del distribuidor:', distribuidorData);
-
-      if (!distribuidorData.activo) {
-        console.error('❌ Distribuidor inactivo');
-        await signOut(auth);
-        navigate('/distribuidor/login');
-        return;
-      }
-
-      setDistribuidor(distribuidorData);
-      setEstadisticas({
-        clicks: distribuidorData.estadisticas?.clicks || 0,
-        leads: distribuidorData.estadisticas?.leads || 0,
-        conversiones: distribuidorData.estadisticas?.conversiones || 0,
-        saldoDisponible: distribuidorData.comisiones?.saldoDisponible || 0,
-        totalGanado: distribuidorData.comisiones?.totalGanado || 0,
-        totalPagado: distribuidorData.comisiones?.totalPagado || 0
-      });
-
-      console.log('✅ Datos cargados correctamente');
-
-    } catch (error) {
-      console.error('❌ Error al cargar datos:', error);
+    if (!distribuidorSnap.exists()) {
+      console.error('❌ Distribuidor no encontrado en Firestore');
+      await signOut(auth);
       navigate('/distribuidor/login');
-    } finally {
-      setLoading(false);
+      return;
     }
-  };
+
+    const distribuidorData = {
+      uid: uid,
+      id: distribuidorSnap.data().id,
+      ...distribuidorSnap.data()
+    };
+
+    console.log('✅ Datos del distribuidor:', distribuidorData);
+
+    if (!distribuidorData.activo) {
+      console.error('❌ Distribuidor inactivo');
+      await signOut(auth);
+      navigate('/distribuidor/login');
+      return;
+    }
+
+    // SOLO AGREGAR ESTO: Contar clicks desde la colección
+    const clicksRef = collection(db, 'clicks');
+    const clicksSnapshot = await getDocs(clicksRef);
+    let totalClicks = 0;
+    clicksSnapshot.forEach((clickDoc) => {
+      if (clickDoc.data().distribuidorId === uid) {
+        totalClicks++;
+      }
+    });
+
+    setDistribuidor(distribuidorData);
+    setEstadisticas({
+      clicks: totalClicks, // SOLO CAMBIAR ESTA LÍNEA
+      leads: distribuidorData.estadisticas?.leads || 0,
+      conversiones: distribuidorData.estadisticas?.conversiones || 0,
+      saldoDisponible: distribuidorData.comisiones?.saldoDisponible || 0,
+      totalGanado: distribuidorData.comisiones?.totalGanado || 0,
+      totalPagado: distribuidorData.comisiones?.totalPagado || 0
+    });
+
+    console.log('✅ Datos cargados correctamente');
+
+  } catch (error) {
+    console.error('❌ Error al cargar datos:', error);
+    navigate('/distribuidor/login');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const recargarDatos = async () => {
     const user = auth.currentUser;

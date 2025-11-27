@@ -36,67 +36,70 @@ export const AdminDashboard = () => {
   }, []);
 
   const cargarEstadisticas = async () => {
-    try {
-      const distribuidoresRef = collection(db, 'distribuidores');
-      const distribuidoresSnapshot = await getDocs(distribuidoresRef);
+  try {
+    const distribuidoresRef = collection(db, 'distribuidores');
+    const distribuidoresSnapshot = await getDocs(distribuidoresRef);
 
-      let totalClicks = 0;
-      let totalLeads = 0;
-      let saldoPendiente = 0;
-      let totalPagado = 0;
+    let totalLeads = 0;
+    let saldoPendiente = 0;
+    let totalPagado = 0;
 
-      distribuidoresSnapshot.forEach((doc) => {
-        const data = doc.data();
-        totalClicks += data.estadisticas?.clicks || 0;
-        totalLeads += data.estadisticas?.leads || 0;
-        saldoPendiente += data.comisiones?.saldoDisponible || 0;
-        totalPagado += data.comisiones?.totalPagado || 0;
-      });
+    distribuidoresSnapshot.forEach((doc) => {
+      const data = doc.data();
+      totalLeads += data.estadisticas?.leads || 0;
+      saldoPendiente += data.comisiones?.saldoDisponible || 0;
+      totalPagado += data.comisiones?.totalPagado || 0;
+    });
 
-      const leadsRef = collection(db, 'leads');
-      const leadsSnapshot = await getDocs(leadsRef);
+    // CORRECCIÓN: Contar clicks desde la colección "clicks"
+    const clicksRef = collection(db, 'clicks');
+    const clicksSnapshot = await getDocs(clicksRef);
+    const totalClicks = clicksSnapshot.size; // Total de documentos en la colección clicks
+
+    const leadsRef = collection(db, 'leads');
+    const leadsSnapshot = await getDocs(leadsRef);
+    
+    let totalConversiones = 0;
+    let leadsSinAtender = 0;
+    
+    leadsSnapshot.forEach((doc) => {
+      const data = doc.data();
       
-      let totalConversiones = 0;
-      let leadsSinAtender = 0;
+      if (data.estado === 'compra_ejecutada' || data.estado === 'cerrado') {
+        totalConversiones++;
+      }
       
-      leadsSnapshot.forEach((doc) => {
-        const data = doc.data();
-        
-        if (data.estado === 'compra_ejecutada' || data.estado === 'cerrado') {
-          totalConversiones++;
-        }
-        
-        if (data.estado === 'pendiente' || data.estado === 'contactado') {
-          leadsSinAtender++;
-        }
-      });
+      if (data.estado === 'pendiente' || data.estado === 'contactado') {
+        leadsSinAtender++;
+      }
+    });
 
-      const solicitudesRef = collection(db, 'solicitudesRetiro');
-      const solicitudesSnapshot = await getDocs(solicitudesRef);
-      
-      let solicitudesPendientes = 0;
-      
-      solicitudesSnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.estado === 'pendiente') {
-          solicitudesPendientes++;
-        }
-      });
+    const solicitudesRef = collection(db, 'solicitudesRetiro');
+    const solicitudesSnapshot = await getDocs(solicitudesRef);
+    
+    let solicitudesPendientes = 0;
+    
+    solicitudesSnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.estado === 'pendiente') {
+        solicitudesPendientes++;
+      }
+    });
 
-      setEstadisticas({
-        totalDistribuidores: distribuidoresSnapshot.size,
-        totalClicks,
-        totalLeads: leadsSnapshot.size,
-        totalConversiones,
-        saldoPendiente,
-        totalPagado,
-        solicitudesPendientes,
-        leadsSinAtender
-      });
-    } catch (error) {
-      console.error('Error al cargar estadísticas:', error);
-    }
-  };
+    setEstadisticas({
+      totalDistribuidores: distribuidoresSnapshot.size,
+      totalClicks, // Ahora viene de la colección "clicks"
+      totalLeads: leadsSnapshot.size,
+      totalConversiones,
+      saldoPendiente,
+      totalPagado,
+      solicitudesPendientes,
+      leadsSinAtender
+    });
+  } catch (error) {
+    console.error('Error al cargar estadísticas:', error);
+  }
+};
 
   const handleLogout = async () => {
     try {

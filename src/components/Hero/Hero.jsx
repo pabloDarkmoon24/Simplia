@@ -21,7 +21,8 @@ import directvgo from '../../assets/directvgo.png'
  
 export const Hero = () => { 
   const [current, setCurrent] = useState(0); 
-  const timerRef = useRef(); 
+  const timerRef = useRef();
+  const [isPaused, setIsPaused] = useState(false); // AGREGAR ESTE ESTADO
  
   const images = [netflix, tarjeta1 ,spotify,tarjeta2, canva,tarjeta3, disney, tarjeta4, max, crunchy,paramount,prime, directvgo];  
  
@@ -36,6 +37,7 @@ export const Hero = () => {
   }; 
  
   const resetAuto = () => { 
+    if (isPaused) return; // NO REINICIAR SI ESTÁ PAUSADO
     clearInterval(timerRef.current); 
     timerRef.current = setInterval(() => { 
       setCurrent((prev) => (prev + 1) % images.length); 
@@ -43,39 +45,40 @@ export const Hero = () => {
   }; 
  
   useEffect(() => { 
-    resetAuto(); 
+    if (!isPaused) { // SOLO INICIAR SI NO ESTÁ PAUSADO
+      resetAuto(); 
+    }
     return () => clearInterval(timerRef.current); 
-  }, []); 
+  }, [isPaused]); // AGREGAR isPaused COMO DEPENDENCIA
  
   const handlers = useSwipeable({ 
     onSwipedLeft: next, 
     onSwipedRight: prev, 
-    trackMouse: true, // para que funcione también con el mouse 
+    trackMouse: true,
     preventDefaultTouchmoveEvent: true, 
   }); 
  
   const getClass = (index) => { 
-  const total = images.length; 
-  const left3 = (current - 3 + total) % total; 
-  const left2 = (current - 2 + total) % total; 
-  const left1 = (current - 1 + total) % total; 
-  const right1 = (current + 1) % total; 
-  const right2 = (current + 2) % total; 
-  const right3 = (current + 3) % total; 
+    const total = images.length; 
+    const left3 = (current - 3 + total) % total; 
+    const left2 = (current - 2 + total) % total; 
+    const left1 = (current - 1 + total) % total; 
+    const right1 = (current + 1) % total; 
+    const right2 = (current + 2) % total; 
+    const right3 = (current + 3) % total; 
  
-  if (index === current) return "activeSlide"; 
-  if (index === left1) return "leftSlide1"; 
-  if (index === left2) return "leftSlide2"; 
-  if (index === left3) return "leftSlide3"; 
-  if (index === right1) return "rightSlide1"; 
-  if (index === right2) return "rightSlide2"; 
-  if (index === right3) return "rightSlide3"; 
-  return "hiddenSlide"; 
-}; 
+    if (index === current) return "activeSlide"; 
+    if (index === left1) return "leftSlide1"; 
+    if (index === left2) return "leftSlide2"; 
+    if (index === left3) return "leftSlide3"; 
+    if (index === right1) return "rightSlide1"; 
+    if (index === right2) return "rightSlide2"; 
+    if (index === right3) return "rightSlide3"; 
+    return "hiddenSlide"; 
+  }; 
 
-  // Función para manejar el click del botón de membresía
   const handleMembresiaClick = () => {
-    const numeroWhatsApp = "573170695865"; // ⚠️ REEMPLAZA CON TU NÚMERO DE WHATSAPP
+    const numeroWhatsApp = "573170695865";
     const mensaje = "Hola! Estoy interesado en conocer las membresías de Simplia 🎬";
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
@@ -88,7 +91,17 @@ export const Hero = () => {
         <h2 className="hero-title">Una sola membresía,</h2> 
         <h3 className="hero-subtitle-box">Para tus servicios favoritos.</h3> 
  
-        <div className="carousel" {...handlers}> 
+        <div 
+          className="carousel" 
+          {...handlers}
+          onMouseEnter={() => {
+            setIsPaused(true);
+            clearInterval(timerRef.current);
+          }}
+          onMouseLeave={() => {
+            setIsPaused(false);
+          }}
+        > 
           <button className="carousel-btn prev" onClick={prev}>‹</button> 
  
           {images.map((img, index) => ( 
@@ -101,7 +114,7 @@ export const Hero = () => {
         </div> 
  
         <p className="hero-description"> 
-          Por un solo precio, descubre lo fácil que es tenerlo todo. 
+          Por un solo precio, descubre lo fácil que es tenerlo todo.
         </p> 
         <img 
           src={boton} 

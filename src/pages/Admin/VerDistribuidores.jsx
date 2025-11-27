@@ -74,37 +74,71 @@ const cargarLeadsSinAtender = async () => {
     console.error('❌ Error al cargar leads sin atender:', error);
   }
 };
-  const cargarDistribuidores = async () => {
-    try {
-      const distribuidoresRef = collection(db, 'distribuidores');
-      const snapshot = await getDocs(distribuidoresRef);
+const cargarDistribuidores = async () => {
+  try {
+    console.log('📊 Iniciando carga de distribuidores...');
+    
+    // 1. Cargar distribuidores
+    const distribuidoresRef = collection(db, 'distribuidores');
+    const snapshot = await getDocs(distribuidoresRef);
 
-      const distribuidoresData = [];
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        distribuidoresData.push({
-          ...data,
-          uid: docSnap.id,
-          docId: docSnap.id
-        });
+    // 2. Cargar todos los clicks
+    console.log('🖱️ Cargando clicks...');
+    const clicksRef = collection(db, 'clicks');
+    const clicksSnapshot = await getDocs(clicksRef);
+    
+    // Contar clicks por distribuidorId (que es el UID de Firebase Auth)
+    const clicksPorUID = {};
+    clicksSnapshot.forEach((clickDoc) => {
+      const clickData = clickDoc.data();
+      const uid = clickData.distribuidorId; // Este es el UID de Firebase Auth
+      if (uid) {
+        clicksPorUID[uid] = (clicksPorUID[uid] || 0) + 1;
+      }
+    });
+    
+    console.log('✅ Clicks contabilizados por UID:', clicksPorUID);
+    console.log('📊 Total de clicks en sistema:', clicksSnapshot.size);
+
+    // 3. Construir array de distribuidores
+    const distribuidoresData = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      const uid = docSnap.id; // Este es el UID del documento (Firebase Auth UID)
+      
+      const totalClicks = clicksPorUID[uid] || 0;
+      
+      console.log(`Distribuidor: ${data.nombre || 'Sin nombre'} (UID: ${uid}) - Clicks: ${totalClicks}`);
+      
+      distribuidoresData.push({
+        ...data,
+        uid: uid,
+        docId: uid,
+        // Mantener estadísticas originales pero actualizar clicks
+        estadisticas: {
+          clicks: totalClicks,
+          leads: data.estadisticas?.leads || 0,
+          conversiones: data.estadisticas?.conversiones || 0
+        }
       });
+    });
 
-      distribuidoresData.sort((a, b) => {
-        const dateA = new Date(a.fechaCreacion || 0);
-        const dateB = new Date(b.fechaCreacion || 0);
-        return dateB - dateA;
-      });
+    // 4. Ordenar por fecha de creación
+    distribuidoresData.sort((a, b) => {
+      const dateA = new Date(a.fechaCreacion || 0);
+      const dateB = new Date(b.fechaCreacion || 0);
+      return dateB - dateA;
+    });
 
-      setDistribuidores(distribuidoresData);
-      console.log('📊 Distribuidores cargados:', distribuidoresData);
-    } catch (error) {
-      console.error('❌ Error al cargar distribuidores:', error);
-      mostrarNotificacion('error', 'Error al cargar distribuidores');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    setDistribuidores(distribuidoresData);
+    console.log('✅ Distribuidores cargados:', distribuidoresData);
+  } catch (error) {
+    console.error('❌ Error al cargar distribuidores:', error);
+    mostrarNotificacion('error', 'Error al cargar distribuidores');
+  } finally {
+    setLoading(false);
+  }
+};
 const cargarLeadsDistribuidor = async (distribuidorUID) => {
   try {
     console.log('📝 Cargando leads del distribuidor UID:', distribuidorUID);

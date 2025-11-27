@@ -114,7 +114,7 @@ export const MisLeads = ({ distribuidorId }) => {
               <tr>
                 <th>Código</th>
                 <th>Cliente</th>
-                <th>Teléfono</th>
+
                 <th>Producto</th>
                 <th>Estado</th>
                 <th>Comisión</th>
@@ -131,16 +131,7 @@ export const MisLeads = ({ distribuidorId }) => {
                       <strong>{lead.nombreCliente}</strong>
                       {lead.email && <><br /><small>{lead.email}</small></>}
                     </td>
-                    <td>
-                      <a 
-                        href={`https://wa.me/${lead.telefono}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="link-whatsapp"
-                      >
-                        {lead.telefono}
-                      </a>
-                    </td>
+
                     <td>{lead.productoInteres}</td>
                     <td>
                       <span className={`badge ${badge.clase}`}>

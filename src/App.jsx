@@ -1,10 +1,11 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from './pages/LandingPage';
-import { AdminLogin } from './pages/Admin/AdminLogin';
+import { AdminLogin} from './pages/Admin/AdminLogin';
 import { AdminDashboard } from './pages/Admin/AdminDashboard';
 import { DistribuidorLogin } from './pages/Distribuidor/DistribuidorLogin';
 import { DistribuidorDashboard } from './pages/Distribuidor/DistribuidorDashboard';
+import { LandingProvisional } from './pages/Admin/LandingProvisional';
 
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
     <Router>
       <Routes>
         {/* Ruta raíz redirige al login de admin */}
-        <Route path="/" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/" element={<LandingProvisional />} />
         
         {/* Rutas de Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
