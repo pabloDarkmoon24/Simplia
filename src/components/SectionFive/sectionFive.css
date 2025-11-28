@@ -169,6 +169,122 @@
   transform: rotate(90deg) scale(1.1);
 }
 
+/* ========================================
+   🆕 POPUP DE DESCUENTO
+   ======================================== */
+
+.popup-descuento-content {
+  position: relative;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: popupSlideIn 0.3s ease-out;
+}
+
+.popup-descuento-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.btn-comprar-ahora {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 18px 50px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-comprar-ahora::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-comprar-ahora:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-comprar-ahora:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+}
+
+.btn-comprar-ahora:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Animación del popup */
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .popup-descuento-content {
+    padding: 20px;
+    max-width: 95%;
+    gap: 15px;
+  }
+
+  .btn-comprar-ahora {
+    padding: 15px 40px;
+    font-size: 18px;
+    width: 100%;
+  }
+
+  .popup-descuento-image {
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup-descuento-content {
+    padding: 15px;
+  }
+
+  .btn-comprar-ahora {
+    padding: 12px 30px;
+    font-size: 16px;
+  }
+}
 /* Animaciones */
 @keyframes fadeIn {
   from {

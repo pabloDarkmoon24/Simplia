@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 import '../SectionFive/sectionFive.css'
 
 import btn1 from '../../assets/boton-lo-quiero-verde.png';
@@ -20,6 +22,11 @@ import popupObsequioConectado from '../../assets/popup-obsequio-conectado.png';
 import popupObsequioEsencial from '../../assets/popup-obsequio-esencial.png';
 import popupObsequioTotal from '../../assets/popup-obsequio-total.png';
 
+// 🆕 NUEVO: Imágenes de popup de descuento
+import popupDescuentoEsencial from '../../assets/conectado.png';
+import popupDescuentoConectado from '../../assets/esential.png';
+import popupDescuentoTotal from '../../assets/total.png';
+
 // IMPORTANTE: Importar el formulario de contacto
 import { FormularioContacto } from "../WhatsAppButton/FormularioContacto";
 
@@ -30,9 +37,66 @@ export const SectionFive = () => {
   const [showInfoPopup, setShowInfoPopup] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   
-  // NUEVO: Estado para controlar el formulario
+  // Estado para controlar el formulario
   const [showFormulario, setShowFormulario] = useState(false);
   const [planPreseleccionado, setPlanPreseleccionado] = useState('');
+  
+  // Estado para el distribuidor
+  const [distribuidor, setDistribuidor] = useState(null);
+
+  // 🆕 NUEVO: Estados para el popup de descuento
+  const [showPopupDescuento, setShowPopupDescuento] = useState(false);
+  const [popupDescuentoImage, setPopupDescuentoImage] = useState(null);
+  const [planTemporal, setPlanTemporal] = useState('');
+
+  // Función para obtener el ID del distribuidor de la URL
+  const obtenerDistribuidorIdDeURL = () => {
+    const path = window.location.pathname;
+    const parts = path.split('/').filter(Boolean);
+    
+    if (parts.length === 1 && parts[0] !== 'distribuidor' && parts[0] !== 'admin') {
+      return parts[0];
+    }
+    
+    return null;
+  };
+
+  // Cargar distribuidor al montar el componente
+  useEffect(() => {
+    const cargarDistribuidor = async () => {
+      const distribuidorId = obtenerDistribuidorIdDeURL();
+      
+      if (!distribuidorId) {
+        console.log('⚠️ No hay distribuidorId en la URL');
+        return;
+      }
+
+      try {
+        console.log('📡 Buscando distribuidor con ID:', distribuidorId);
+        
+        const distribuidoresRef = collection(db, 'distribuidores');
+        const q = query(distribuidoresRef, where('id', '==', distribuidorId));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          const docSnap = querySnapshot.docs[0];
+          const distribuidorData = {
+            uid: docSnap.id,
+            ...docSnap.data()
+          };
+          
+          console.log('✅ Distribuidor encontrado:', distribuidorData);
+          setDistribuidor(distribuidorData);
+        } else {
+          console.error('❌ No se encontró distribuidor con id:', distribuidorId);
+        }
+      } catch (error) {
+        console.error('❌ Error al cargar distribuidor:', error);
+      }
+    };
+
+    cargarDistribuidor();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -43,6 +107,7 @@ export const SectionFive = () => {
         if (showPopup) closePopup();
         if (showInfoPopup) closeInfoPopup();
         if (showFormulario) setShowFormulario(false);
+        if (showPopupDescuento) closePopupDescuento(); // 🆕
       }
     };
     window.addEventListener('keydown', handleEsc);
@@ -51,7 +116,7 @@ export const SectionFive = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [showPopup, showInfoPopup, showFormulario]);
+  }, [showPopup, showInfoPopup, showFormulario, showPopupDescuento]);
 
   // Información de los planes
   const planInfo = {
@@ -166,7 +231,7 @@ export const SectionFive = () => {
           items: [
             "✔ Activación mediante enlace",
             "✔ Solo compatible con Smart TV que generen código",
-            "❗ No disponible en dispositivos sin ingreso por código",
+            "❌ No disponible en dispositivos sin ingreso por código",
             "📺 Incluye 1 pantalla"
           ]
         },
@@ -212,20 +277,37 @@ export const SectionFive = () => {
     window.open('https://forms.gle/JKk6RM1AByfaQWAb8', '_blank');
   };
 
-  // NUEVAS FUNCIONES: Abrir formulario con plan preseleccionado
+  // 🆕 NUEVAS FUNCIONES: Abrir popup de descuento primero
   const handleLoQuieroEsencial = () => {
-    setPlanPreseleccionado('Plan Esencial 🎬');
-    setShowFormulario(true);
+    setPlanTemporal('Plan Esencial 🎬');
+    setPopupDescuentoImage(popupDescuentoEsencial);
+    setShowPopupDescuento(true);
   };
 
   const handleLoQuieroConectado = () => {
-    setPlanPreseleccionado('Plan Conectado 📱');
-    setShowFormulario(true);
+    setPlanTemporal('Plan Conectado 📱');
+    setPopupDescuentoImage(popupDescuentoConectado);
+    setShowPopupDescuento(true);
   };
 
   const handleLoQuieroTotal = () => {
-    setPlanPreseleccionado('Plan Total 🌟');
-    setShowFormulario(true);
+    setPlanTemporal('Plan Total 🌟');
+    setPopupDescuentoImage(popupDescuentoTotal);
+    setShowPopupDescuento(true);
+  };
+
+  // 🆕 Función para abrir el formulario desde el popup de descuento
+  const handleComprarAhora = () => {
+    setPlanPreseleccionado(planTemporal);
+    setShowPopupDescuento(false); // Cerrar popup de descuento
+    setShowFormulario(true); // Abrir formulario
+  };
+
+  // 🆕 Función para cerrar el popup de descuento
+  const closePopupDescuento = () => {
+    setShowPopupDescuento(false);
+    setPopupDescuentoImage(null);
+    setPlanTemporal('');
   };
 
   // Funciones para abrir popup con la imagen de obsequios
@@ -325,6 +407,21 @@ export const SectionFive = () => {
         </div>
       )}
 
+      {/* 🆕 NUEVO: Popup de descuento con botón "Comprar Ahora" */}
+      {showPopupDescuento && (
+        <div className="popup-overlay" onClick={closePopupDescuento}>
+          <div className="popup-descuento-content" onClick={(e) => e.stopPropagation()}>
+            <button className="popup-close" onClick={closePopupDescuento}>
+              ✕
+            </button>
+            <img src={popupDescuentoImage} alt="Descuento especial" className="popup-descuento-image" />
+            <button className="btn-comprar-ahora" onClick={handleComprarAhora}>
+              COMPRAR AHORA
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Popup para mostrar información del plan */}
       {showInfoPopup && selectedPlan && (
         <div className="popup-overlay" onClick={closeInfoPopup}>
@@ -354,9 +451,10 @@ export const SectionFive = () => {
         </div>
       )}
 
-      {/* NUEVO: Formulario de contacto con plan preseleccionado */}
+      {/* Formulario de contacto */}
       {showFormulario && (
         <FormularioContacto
+          distribuidor={distribuidor}
           onClose={() => setShowFormulario(false)}
           planPreseleccionado={planPreseleccionado}
         />
