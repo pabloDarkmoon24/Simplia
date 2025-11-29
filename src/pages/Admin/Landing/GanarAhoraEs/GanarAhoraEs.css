@@ -1,0 +1,305 @@
+/* GanarAhoraEs/GanarAhoraEs.css */
+
+.ganar-ahora-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #070625;
+  padding: 4rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ganar-ahora-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 30%, 
+    rgba(99, 102, 241, 0.1) 0%, 
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ganar-ahora-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  box-sizing: border-box;
+}
+
+.ganar-ahora-title {
+  text-align: center;
+  animation: fadeInDown 1s ease-out;
+}
+
+.ganar-ahora-title h2 {
+  font-size: 70px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: 'GriftSemiblod', sans-serif;
+  margin: 0;
+}
+
+.ganar-ahora-logo {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInScale 1.2s ease-out;
+}
+
+.ganar-ahora-logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 30px rgba(99, 102, 241, 0.4));
+}
+
+.beneficios-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+  animation: fadeInUp 1.4s ease-out;
+}
+
+.beneficio-card {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  padding: 1rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.beneficio-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+}
+
+.beneficio-card p {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: 'GriftSemiblod', sans-serif;
+  margin: 0;
+  text-align: center;
+}
+
+.ganar-ahora-cta {
+  margin-top: 2rem;
+  animation: fadeInUp 1.6s ease-out;
+}
+
+.btn-registro-ahora {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.btn-registro-ahora:hover {
+  transform: translateY(-5px);
+  filter: brightness(1.1);
+}
+
+.btn-registro-ahora:active {
+  transform: translateY(-2px);
+}
+
+.btn-registro-ahora img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 8px 20px rgba(6, 182, 212, 0.4));
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE - 3 BREAKPOINTS ESENCIALES */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .ganar-ahora-section {
+    padding: 3rem 0;
+    min-height: auto;
+  }
+
+  .ganar-ahora-container {
+    padding: 0 1.5rem;
+    gap: 2.5rem;
+  }
+
+  .ganar-ahora-title h2 {
+    font-size: 48px;
+  }
+
+  .ganar-ahora-logo {
+    max-width: 320px;
+  }
+
+  .beneficios-grid {
+    gap: 1.25rem;
+    max-width: 600px;
+  }
+
+  .beneficio-card {
+    padding: 1.25rem 2rem;
+  }
+
+  .beneficio-card p {
+    font-size: 1.75rem;
+  }
+
+  .ganar-ahora-cta {
+    margin-top: 1.5rem;
+  }
+
+  .btn-registro-ahora img {
+    max-width: 400px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .ganar-ahora-section {
+    padding: 2rem 0;
+  }
+
+  .ganar-ahora-container {
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+
+  .ganar-ahora-title h2 {
+    font-size: 32px;
+    line-height: 1.2;
+  }
+
+  .ganar-ahora-logo {
+    max-width: 250px;
+  }
+
+  .beneficios-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .beneficio-card {
+    padding: 1rem 1.5rem;
+  }
+
+  .beneficio-card p {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .ganar-ahora-cta {
+    margin-top: 1rem;
+  }
+
+  .btn-registro-ahora img {
+    max-width: 320px;
+  }
+}
+
+/* Mobile Small */
+@media (max-width: 360px) {
+  .ganar-ahora-section {
+    padding: 1.5rem 0;
+  }
+
+  .ganar-ahora-container {
+    padding: 0 0.75rem;
+    gap: 1.5rem;
+  }
+
+  .ganar-ahora-title h2 {
+    font-size: 28px;
+  }
+
+  .ganar-ahora-logo {
+    max-width: 220px;
+  }
+
+  .beneficios-grid {
+    gap: 0.875rem;
+    padding: 0;
+  }
+
+  .beneficio-card {
+    padding: 0.875rem 1.25rem;
+  }
+
+  .beneficio-card p {
+    font-size: 1.125rem;
+  }
+
+  .btn-registro-ahora img {
+    max-width: 280px;
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .ganar-ahora-title,
+  .ganar-ahora-logo,
+  .beneficios-grid,
+  .ganar-ahora-cta {
+    animation: none;
+  }
+
+  .beneficio-card:hover,
+  .btn-registro-ahora:hover {
+    transform: none;
+  }
+}

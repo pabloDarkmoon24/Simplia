@@ -1,5 +1,7 @@
 /* GanaPorRegistrarte/GanaPorRegistrarte.css */
 
+/* GanaPorRegistrarte/GanaPorRegistrarte.css */
+
 .gana-section {
   position: relative;
   width: 100%;
@@ -9,7 +11,6 @@
   overflow: hidden;
 }
 
-/* Elementos flotantes decorativos */
 .floating-element {
   position: absolute;
   z-index: 1;
@@ -37,26 +38,16 @@
   display: block;
 }
 
-/* Animaciones de flotación */
 @keyframes floatLeft {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    transform: translateY(-20px) translateX(10px);
-  }
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(10px); }
 }
 
 @keyframes floatRight {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-  }
-  50% {
-    transform: translateY(-20px) translateX(-10px);
-  }
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(-10px); }
 }
 
-/* Container principal */
 .gana-container {
   position: relative;
   z-index: 2;
@@ -64,6 +55,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  box-sizing: border-box;
 }
 
 .gana-content {
@@ -71,9 +63,9 @@
   flex-direction: column;
   align-items: center;
   gap: 3rem;
+  width: 100%;
 }
 
-/* Título principal */
 .gana-title {
   width: 100%;
   max-width: 900px;
@@ -87,7 +79,6 @@
   display: block;
 }
 
-/* Screen reader only */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -100,7 +91,6 @@
   border-width: 0;
 }
 
-/* Iconos de servicios */
 .gana-services {
   display: flex;
   align-items: center;
@@ -135,7 +125,6 @@
   width: 150px;
 }
 
-/* Texto destacado arriba del CTA */
 .cta-highlight {
   font-size: 2rem;
   font-weight: 400;
@@ -144,6 +133,9 @@
   font-family: 'GriftSemiblod', sans-serif;
   text-align: center;
   animation: fadeInUp 1.5s ease-out;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .highlight-bold {
@@ -153,7 +145,6 @@
   font-family: 'GriftSemiblod';
 }
 
-/* CTA Text con fondo cyan */
 .gana-cta-text {
   text-align: center;
   background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
@@ -162,6 +153,9 @@
   box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
   animation: fadeInUp 1.6s ease-out;
   margin-top: -3rem;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .cta-description {
@@ -172,129 +166,163 @@
   font-weight: 600;
 }
 
-/* Animaciones */
 @keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .gana-section {
-    padding: 3rem 0;
-  }
+/* RESPONSIVE - 3 BREAKPOINTS */
 
-  .floating-left,
-  .floating-right {
+/* Tablet */
+@media (max-width: 768px) {
+  .floating-left, .floating-right {
     width: 150px;
     opacity: 0.5;
   }
-
+  
   .gana-container {
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
-
+  
   .gana-content {
     gap: 2rem;
   }
 
+  .gana-title {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
   .gana-services {
-    gap: 1.5rem;
+    padding: 0 1rem;
   }
-
+  
   .service-item {
-    width: 100px;
+    width: 110px;
   }
-
+  
   .service-logo {
-    width: 120px;
+    width: 110px;
   }
-
+  
   .cta-highlight {
     font-size: 1.5rem;
+    padding: 0 1rem;
   }
-
+  
   .highlight-bold {
-    font-size: 1.75rem;
+    font-size: 26px;
   }
-
+  
   .gana-cta-text {
-    padding: 1rem 2rem;
+    padding: 5px 20px;
+    margin-top: -2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
-
+  
   .cta-description {
-    font-size: 1.125rem;
+    font-size: 24px;
   }
 }
 
+/* Mobile */
 @media (max-width: 480px) {
-  .floating-left,
-  .floating-right {
+  .floating-left, .floating-right {
     width: 100px;
     opacity: 0.3;
   }
+  
+  .gana-container {
+    padding: 0 1rem;
+  }
+  
+  .gana-content {
+    gap: 1.5rem;
+  }
 
   .gana-title {
-    max-width: 100%;
+    padding: 0;
   }
-
+  
   .gana-services {
     gap: 1rem;
+    padding: 0;
   }
-
+  
   .service-item {
-    width: 80px;
+    width: 70px;
   }
-
+  
   .service-logo {
-    width: 100px;
+    width: 75px;
   }
-
+  
   .cta-highlight {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
+    padding: 0 0.5rem;
   }
-
+  
   .highlight-bold {
-    font-size: 1.5rem;
+    font-size: 20px;
+    display: block;
   }
-
+  
   .gana-cta-text {
-    padding: 0.875rem 1.5rem;
+    padding: 4px 12px;
+    margin-top: -1.25rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
-
+  
   .cta-description {
-    font-size: 1rem;
+    font-size: 16px;
+    line-height: 1.2;
   }
 }
 
-/* Accesibilidad */
-@media (prefers-reduced-motion: reduce) {
-  .floating-left,
-  .floating-right,
-  .gana-title,
-  .gana-services,
-  .cta-highlight,
-  .gana-cta-text {
-    animation: none;
+/* Mobile Small */
+@media (max-width: 360px) {
+  .gana-container {
+    padding: 0 0.75rem;
   }
 
+  .service-item {
+    width: 60px;
+  }
+  
+  .service-logo {
+    width: 65px;
+  }
+  
+  .cta-highlight {
+    font-size: 1rem;
+    padding: 0 0.25rem;
+  }
+  
+  .highlight-bold {
+    font-size: 18px;
+  }
+
+  .gana-cta-text {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+  
+  .cta-description {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-left, .floating-right, .gana-title, .gana-services, .cta-highlight, .gana-cta-text {
+    animation: none;
+  }
   .service-item:hover {
     transform: none;
   }

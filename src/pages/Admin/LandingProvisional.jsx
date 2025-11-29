@@ -5,6 +5,8 @@ import GanaPorRegistrarte from './Landing/GanaPorRegistrarte/GanaPorRegistrarte'
 import GanaPorCompartir from './Landing/GanaPorCompartir/GanaPorCompartir';
 import ComoIniciar from './Landing/ComoIniciar/ComoIniciar';
 import RegistroDistribuidor from './Landing/RegistroDistribuidor/RegistroDistribuidor';
+import BonosExtras from './Landing/BonosExtras/BonosExtras';
+import GanarAhoraEs from './Landing/GanarAhoraEs/GanarAhoraEs';
 
 export const LandingProvisional = () => {
   const navigate = useNavigate();
@@ -16,6 +18,9 @@ export const LandingProvisional = () => {
     <GanaPorCompartir/>
     <ComoIniciar />
     <RegistroDistribuidor/>
+    <BonosExtras />
+    <GanarAhoraEs />
+
     </>
     
   );

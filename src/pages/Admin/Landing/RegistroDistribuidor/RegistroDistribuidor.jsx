@@ -249,15 +249,14 @@ const RegistroDistribuidor = () => {
   const copiarCredenciales = () => {
     if (!credenciales) return;
 
-    const texto = `¡Hola! Me acabo de registrar en Simplia 🎉
-
+    const texto = `✨ CREDENCIALES DE ACCESO - SIMPLIA 🎉
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 Nombre:   ${credenciales.nombre} 
 📧 Mi email: ${credenciales.email}
 🔑 Mi contraseña: ${credenciales.password}
-🔗 Mi link de referido: ${credenciales.link}
-
-Nombre: ${credenciales.nombre}
-Cédula: ${credenciales.cedula}
-Ciudad: ${credenciales.ciudad}`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 Panel: https://simpliacol.com/distribuidor/login
+🔗 Mi link de referido: ${credenciales.link}`;
 
     navigator.clipboard.writeText(texto);
     
@@ -301,6 +300,7 @@ Ciudad: ${credenciales.ciudad}`;
           {/* Formulario */}
           <div className="registro-form-wrapper">
             <form onSubmit={handleSubmit} className="registro-form">
+              <p>¡Únete ahora! <br />  ¡Empieza a ganar hoy!</p>
               
               <div className="form-field">
                 <input
@@ -408,7 +408,7 @@ Ciudad: ${credenciales.ciudad}`;
             <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
             
             <div className="modal-header">
-              <h3>¡Hola! Me acabo de registrar en Simplia 🎉</h3>
+              <h3><center>Bienvenido a Simplia  hora de comenzar a ganar🎉</center></h3>
             </div>
 
             <div className="modal-body">
@@ -417,10 +417,10 @@ Ciudad: ${credenciales.ciudad}`;
                 <span className="credencial-valor">{credenciales.email}</span>
               </div>
 
-              <div className="credencial-item">
+              {/* <div className="credencial-item">
                 <span className="credencial-label">🔑 Mi contraseña:</span>
                 <span className="credencial-valor">{credenciales.password}</span>
-              </div>
+              </div> */}
 
               <div className="credencial-item">
                 <span className="credencial-label">🔗 Mi link de referido:</span>
