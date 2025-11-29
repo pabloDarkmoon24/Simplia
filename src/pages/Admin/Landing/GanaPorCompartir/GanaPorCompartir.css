@@ -1,0 +1,136 @@
+/* GanaPorCompartir/GanaPorCompartir.css */
+
+.compartir-section {
+  position: relative;
+  width: 100%;
+  min-height: 70%;
+  background: #5C59E8 ;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Efecto de brillo sutil en el fondo */
+.compartir-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.compartir-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.compartir-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Imagen principal */
+.compartir-image {
+  width: 100%;
+  max-width: 1200px;
+  animation: fadeInScale 1s ease-out;
+}
+
+.compartir-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Animación */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .compartir-section {
+    padding: 3rem 0;
+  }
+
+  .compartir-container {
+    padding: 0 1.5rem;
+  }
+
+  .compartir-image {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  .compartir-section {
+    min-height: auto;
+    padding: 2.5rem 0;
+  }
+
+  .compartir-container {
+    padding: 0 1rem;
+  }
+
+  .compartir-image {
+    max-width: 100%;
+  }
+
+  .compartir-image img {
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+  }
+}
+
+@media (max-width: 480px) {
+  .compartir-section {
+    padding: 2rem 0;
+  }
+
+  .compartir-container {
+    padding: 0 0.5rem;
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .compartir-image {
+    animation: none;
+  }
+}
+
+/* Mejora visual para pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .compartir-image img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

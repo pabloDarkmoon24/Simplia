@@ -1,0 +1,203 @@
+/* Hero/Hero.css */
+@font-face {
+  font-family: 'GriftSemiblod';
+  src: url('../../assets/fonts/GRIFT-SEMIBOLD.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'LaboraRegular';
+  src: url('../../assets/fonts/LABORA-REGULAR.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/src/landingPrincipal/BG-banner-principal.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+/* Overlay para mejorar contraste si es necesario */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2rem;
+}
+
+/* Imagen principal */
+.hero-main-image {
+  width: 100%;
+  max-width: 100%;
+  animation: fadeInUp 1s ease-out;
+}
+
+.hero-main-image img {
+  margin-top: 70px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Subtítulo */
+.hero-subtitle {
+  max-width: 800px;
+}
+
+.hero-subtitle p {
+  margin-top: 0px;
+  font-size: 35px;
+  margin-left: 25px;
+  line-height: 1.2;
+  color: #ffffff;
+  font-weight: 400;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-family:GriftSemiblod ;
+}
+
+/* Call to Action Button */
+.hero-btn-primary {
+  display: inline-block;
+  padding: 5px 20px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: #ffffff;
+  font-size: 40px;
+  font-family: 'GriftSemiblod';
+  text-decoration: none;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.5);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.7);
+  background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+  color: #ffffff; /* ✅ AGREGADO - mantiene el texto blanco */
+}
+
+.hero-btn-primary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.5);
+  color: #ffffff; /* ✅ AGREGADO - mantiene el texto blanco */
+}
+
+/* ✅ AGREGADO - Fuerza el color blanco en todos los estados */
+.hero-btn-primary:link,
+.hero-btn-primary:visited,
+.hero-btn-primary:hover,
+.hero-btn-primary:active,
+.hero-btn-primary:focus {
+  color: #ffffff;
+}
+
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 90vh;
+  }
+
+  .hero-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero-content {
+    gap: 1.5rem;
+  }
+
+  .hero-main-image {
+    max-width: 90%;
+  }
+
+  .hero-subtitle p {
+    font-size: 1rem;
+  }
+
+  .hero-btn-primary {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+
+  .hero-separator {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-subtitle p {
+    font-size: 0.9375rem;
+    padding: 0 0.5rem;
+  }
+
+  .hero-btn-primary {
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .hero-separator {
+    max-width: 300px;
+    margin-top: 1.5rem;
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .hero-main-image,
+  .hero-subtitle,
+  .hero-cta,
+  .hero-separator {
+    animation: none;
+  }
+
+  .hero-btn-primary:hover {
+    transform: none;
+  }
+}

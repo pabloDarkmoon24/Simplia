@@ -1,0 +1,251 @@
+/* ComoIniciar/ComoIniciar.css */
+
+.como-iniciar-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #070625; /* Color de respaldo para toda la sección */
+}
+
+
+/* Parte superior con imagen de fondo */
+.como-iniciar-top {
+  position: relative;
+  width: 100%;
+  min-height: 10vh;
+  background-image: url('../../../../landingPrincipal/BG-estas-ganando-inckusi-sin-vender.png');
+  background-size: cover; /* CAMBIADO: contain en lugar de cover para mostrar toda la imagen */
+  background-position: center center;
+  background-repeat: no-repeat;
+  padding: 4rem 0 6rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Overlay sutil para mejorar contraste */
+.como-iniciar-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Parte inferior con color sólido */
+.como-iniciar-bottom {
+  position: relative;
+  width: 100%;
+  background: #070625;
+  padding: 0rem 0 6rem 0;
+}
+
+/* Container compartido */
+.como-iniciar-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Título principal (imagen) */
+.como-iniciar-title {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fadeInUp 1s ease-out;
+}
+
+.como-iniciar-title img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Subtítulo */
+.como-iniciar-subtitle {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInUp 1.2s ease-out;
+}
+
+.como-iniciar-subtitle h3 {
+  font-size: 60px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'GriftSemiblod', sans-serif;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Grid de pasos */
+.pasos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeInUp 1.4s ease-out;
+}
+
+.paso-card {
+  position: relative;
+  width: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.paso-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.4);
+}
+
+.paso-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+}
+
+.hero-separator {
+  width: 100%;
+  max-width: 800px;
+  margin: 8rem auto 0 auto; /* Agregado 'auto' para centrar horizontalmente */
+  animation: fadeInUp 1.6s ease-out;
+  display: flex; /* Agregado */
+  justify-content: center; /* Agregado para centrar el contenido */
+}
+
+.hero-separator img {
+  width: 100%; /* Cambiado de 800px fijo a 100% */
+  max-width: 800px; /* Añadido max-width para controlar el tamaño máximo */
+  height: auto;
+  display: block;
+  margin: 0 auto; /* Agregado para asegurar el centrado */
+}
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .como-iniciar-top {
+    padding: 3rem 0 5rem 0;
+    background-size: contain; /* Mantener contain en tablet */
+  }
+
+  .como-iniciar-bottom {
+    padding: 3rem 0 5rem 0;
+  }
+
+  .como-iniciar-subtitle h3 {
+    font-size: 2rem;
+  }
+
+  .pasos-grid {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .como-iniciar-top {
+    padding: 2.5rem 0 4rem 0;
+    background-size: cover; /* En móvil cambiar a cover para mejor visualización */
+    background-position: center;
+  }
+
+  .como-iniciar-bottom {
+    padding: 2.5rem 0 4rem 0;
+  }
+
+  .como-iniciar-container {
+    padding: 0 1rem;
+  }
+
+  .como-iniciar-subtitle {
+    margin-bottom: 2rem;
+  }
+
+  .como-iniciar-subtitle h3 {
+    font-size: 1.75rem;
+  }
+
+  .pasos-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 500px;
+  }
+
+  .paso-card:hover {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 480px) {
+  .como-iniciar-top {
+    padding: 2rem 0 3rem 0;
+  }
+
+  .como-iniciar-bottom {
+    padding: 2rem 0 3rem 0;
+  }
+
+  .como-iniciar-container {
+    padding: 0 0.75rem;
+  }
+
+  .como-iniciar-subtitle h3 {
+    font-size: 1.5rem;
+  }
+
+  .pasos-grid {
+    gap: 1rem;
+  }
+
+  .paso-card img {
+    border-radius: 15px;
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .como-iniciar-title,
+  .como-iniciar-subtitle,
+  .pasos-grid {
+    animation: none;
+  }
+
+  .paso-card:hover {
+    transform: none;
+  }
+}
