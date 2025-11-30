@@ -460,7 +460,10 @@ const cambiarPasswordDistribuidor = async () => {
           <h2>Leads de: {distribuidorSeleccionado.nombre}</h2>
           <p>
             <strong>ID:</strong> <code>{distribuidorSeleccionado.id}</code> | 
-            <strong> WhatsApp:</strong> {distribuidorSeleccionado.whatsapp}
+            <strong> WhatsApp:</strong> {distribuidorSeleccionado.whatsappContacto} | 
+            <strong> email:</strong> {distribuidorSeleccionado.email} | 
+            <strong> ciudad:</strong> {distribuidorSeleccionado.ciudad} | 
+            <strong> cedula:</strong> {distribuidorSeleccionado.cedula} | 
           </p>
           <div className="stats-mini">
             <span>📊 Clicks: {distribuidorSeleccionado.estadisticas?.clicks || 0}</span>
@@ -600,7 +603,7 @@ const cambiarPasswordDistribuidor = async () => {
                       {distribuidor.id}
                     </code>
                   </td>
-                  <td>{distribuidor.whatsapp || 'N/A'}</td>
+                  <td>{distribuidor.whatsappContacto || 'N/A'}</td>
                   <td className="stat-cell">{distribuidor.estadisticas?.clicks || 0}</td>
                   <td className="stat-cell">{distribuidor.estadisticas?.leads || 0}</td>
                   <td className="stat-cell">{distribuidor.estadisticas?.conversiones || 0}</td>
